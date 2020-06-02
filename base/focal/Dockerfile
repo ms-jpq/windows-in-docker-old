@@ -17,6 +17,7 @@ ENTRYPOINT ["/init"]
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
     apt install -y \
+    python3 \
     qemu-kvm \
     ovmf \
     libvirt-daemon \
@@ -44,7 +45,7 @@ ENV PATH_PREFIX=/ \
 
 
 ## All Dependencies Satisfied
-COPY root /
+COPY _root /
 
 
 # Cleanup

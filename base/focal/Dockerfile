@@ -25,6 +25,9 @@ RUN apt update && \
     libvirt-clients \
     virt-top \
     virtinst
+RUN groupadd kvm && \
+    useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
+    useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq
 EXPOSE 5900
 
 

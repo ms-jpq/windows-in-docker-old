@@ -13,7 +13,7 @@ RUN tar xzf /_install/s6-overlay-amd64.tar.gz -C / --exclude="./bin" && \
 ENTRYPOINT ["/init"]
 
 
-## KDE
+## KVM
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
     apt install -y \

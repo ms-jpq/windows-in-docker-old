@@ -6,5 +6,3 @@ for rc in /vmrc/**
 do
   ."$rc"
 done
-
-sleep infinity

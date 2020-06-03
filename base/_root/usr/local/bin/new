@@ -44,7 +44,6 @@ def p_network() -> str:
 
 def install(args: Namespace) -> List[str]:
   vmdk = f"{_vmdk_dir_}/{args.name}.img"
-  bridge = ""  # "--network bridge={bridge},model=virtio"
   return f"""
     virt-install
     {"" if args.bios else "--boot uefi"}
@@ -57,7 +56,6 @@ def install(args: Namespace) -> List[str]:
     --controller type=scsi,model=virtio-scsi
     --disk path={vmdk},size={args.disk_size},format=raw,sparse=true,bus=scsi,discard=unmap,io=threads,cache=none
     {p_network()}
-    {bridge}
     --graphics vnc,listen=0.0.0.0
     --video qxl,ram={args.vram}
     --channel unix,target_type=virtio,name=org.qemu.guest_agent.0

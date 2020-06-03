@@ -39,6 +39,7 @@ def main() -> None:
     xml = network_xml(name)
     write(temp.name, xml)
     call("virsh", "net-define", temp.name)
+    call("virsh", "net-autostart", name)
     call("virsh", "net-start", name)
 
 

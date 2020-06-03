@@ -3,20 +3,11 @@
 from subprocess import run
 from sys import stderr, stdout
 from tempfile import NamedTemporaryFile
-from typing import List, Iterable
+from typing import List, Iterable, Set
+from pprint import pprint as pp
 
+import libvirt
 from psutil import net_if_addrs
-
-
-def call(*args: List[str]) -> None:
-  ret = run(args, stdout=stdout, stderr=stderr)
-  if ret.returncode != 0:
-    exit(ret.returncode)
-
-
-def write(path: str, text: str) -> None:
-  with open(path, "w") as fd:
-    fd.write(text)
 
 
 def network_xml(interface: str) -> str:
@@ -30,17 +21,23 @@ def network_xml(interface: str) -> str:
   """
 
 
+def find_net(conn, name: str):
+  try:
+    return conn.networkLookupByName(name)
+  except libvirt.libvirtError:
+    return None
+
+
 def main() -> None:
   interfaces: Iterable[str] = (name
                                for name in net_if_addrs().keys()
                                if name != "lo")
   temp = NamedTemporaryFile()
-  # for name in interfaces:
-  #   xml = network_xml(name)
-  #   write(temp.name, xml)
-  #   call("virsh", "net-define", temp.name)
-  #   call("virsh", "net-autostart", name)
-  #   call("virsh", "net-start", name)
+  with libvirt.open(None) as conn:
+    for name in interfaces:
+      if find_net(conn, name) is None:
+        xml = network_xml(name)
+        net = conn.networkCreateXML(xml)
 
 
 main()

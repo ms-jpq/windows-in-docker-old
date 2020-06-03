@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 
-from subprocess import run
-from sys import stderr, stdout
-from tempfile import NamedTemporaryFile
-from typing import List, Iterable, Set
-from pprint import pprint as pp
+from typing import Iterable
 
 import libvirt
 from psutil import net_if_addrs
@@ -32,7 +28,6 @@ def main() -> None:
   interfaces: Iterable[str] = (name
                                for name in net_if_addrs().keys()
                                if name != "lo")
-  temp = NamedTemporaryFile()
   with libvirt.open(None) as conn:
     for name in interfaces:
       if find_net(conn, name) is None:

@@ -7,12 +7,7 @@ cd /vmrc || exit 1
 
 s6-svwait /var/run/s6/services/libvirtd
 
+virsh net-define /vmrc/br0.xml
+virsh net-start br0
 
-while true
-do
-  for rc in **
-  do
-    ."/$rc"
-  done
-  sleep 3
-done
+sleep infinity

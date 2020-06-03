@@ -20,6 +20,7 @@ RUN apt update && \
     apt install -y \
     dnsmasq \
     iptables \
+    bridge-utils \
     qemu-kvm \
     ovmf \
     libvirt-daemon \

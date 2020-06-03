@@ -10,6 +10,8 @@ from uuid import uuid4
 
 _vmdk_dir_ = "/config"
 _sound_ = "hda"
+_lan_ = ""
+_bridge_ = ""
 
 
 def console_size() -> Tuple[int, int]:
@@ -36,50 +38,53 @@ def parse() -> Namespace:
   parser.add_argument("-d", "--dry", action="store_true")
   parser.add_argument("-n", "--name", required=True)
   parser.add_argument("-c", "--cpus", default=cpu_count())
-  parser.add_argument("-u", "--uuid", default=str(uuid4()))
   parser.add_argument("-m", "--memory", default=4000)
-  parser.add_argument("-s", "--size", default=100)
-  parser.add_argument("-i", "--io", default="threads")
-  parser.add_argument("-w", "--cache", default="none")
-  parser.add_argument("--uefi", action="store_true", default=False)
-  parser.add_argument("--lan", required=True)
-  parser.add_argument("--bridge", required=True)
-  parser.add_argument("--media", required=True)
-  parser.add_argument("--drivers", required=True)
+  parser.add_argument("-s", "--disk-size", default=100)
+
+  parser.add_argument("--vram", default=256000)
+  parser.add_argument("--bios", action="store_true", default=False)
+
+  parser.add_argument("--install-media", required=True)
+  parser.add_argument("--install-drivers", required=True)
   parser.add_argument("--extra", default="")
+
   return parser.parse_args()
-
-
-args = parse()
 
 
 def install(args: Namespace) -> str:
   vmdk = f"{_vmdk_dir_}/{args.name}.img"
+  lan = ""
+  bridge = ""
   return f"""
     virt-install
-    {"--boot uefi" if args.uefi else ""}
+    {"" if args.bios else "--boot uefi"}
     --noautoconsole
     --features kvm_hidden=on
     --virt-type kvm
     --os-variant=win10
     --vcpus {args.cpus},sockets=1
-    --cpu host-passthrough
     --memory {args.memory}
     --controller type=scsi,model=virtio-scsi
-    --disk path={vmdk},size={args.size},format=raw,sparse=true,bus=scsi,discard=unmap,io={args.io},cache={args.cache}
-    --network {args.lan},model=virtio
-    --network bridge={args.bridge},model=virtio
+    --disk path={vmdk},size={args.disk_size},format=raw,sparse=true,bus=scsi,discard=unmap,io=threads,cache=none
+    --network {lan},model=virtio
+    --network bridge={bridge},model=virtio
     --graphics vnc,listen=0.0.0.0
-    --video qxl,ram=256000
+    --video qxl,ram={args.vram}
     --channel unix,target_type=virtio,name=org.qemu.guest_agent.0
-    --disk {args.media},device=cdrom
-    --disk {args.drivers},device=cdrom
+    --disk {args.install_media},device=cdrom
+    --disk {args.install_drivers},device=cdrom
     --qemu-commandline="-soundhw"
     --qemu-commandline="{_sound_}"
     --qemu-commandline="-uuid"
-    --qemu-commandline="{args.uuid}"
+    --qemu-commandline="{uuid4()}"
     --name {args.name}
     --check disk_size=off
     {args.extra}
     {"--print-xml --dry-run" if args.dry else ""}
     """
+
+
+def main() -> None:
+  args = parse()
+  cmd = install(args)
+  print(args)

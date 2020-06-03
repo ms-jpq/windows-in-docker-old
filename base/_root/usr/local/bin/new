@@ -36,7 +36,7 @@ def parse() -> Namespace:
 
 
 def p_network() -> str:
-  interfaces = (f"--network {name},model=virtio"
+  interfaces = (f"--network bridge={name},model=virtio"
                 for name in net_if_addrs().keys()
                 if name != "lo")
   return "\n".join(interfaces)

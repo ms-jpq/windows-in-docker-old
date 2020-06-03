@@ -35,12 +35,12 @@ def main() -> None:
                                for name in net_if_addrs().keys()
                                if name != "lo")
   temp = NamedTemporaryFile()
-  for name in interfaces:
-    xml = network_xml(name)
-    write(temp.name, xml)
-    call("virsh", "net-define", temp.name)
-    call("virsh", "net-autostart", name)
-    call("virsh", "net-start", name)
+  # for name in interfaces:
+  #   xml = network_xml(name)
+  #   write(temp.name, xml)
+  #   call("virsh", "net-define", temp.name)
+  #   call("virsh", "net-autostart", name)
+  #   call("virsh", "net-start", name)
 
 
 main()

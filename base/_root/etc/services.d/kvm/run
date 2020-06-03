@@ -7,6 +7,7 @@ cd /vmrc || exit 1
 
 s6-svwait /var/run/s6/services/libvirtd
 
+
 while true
 do
   for rc in **

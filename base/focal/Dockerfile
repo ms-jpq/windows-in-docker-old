@@ -51,7 +51,7 @@ ENV PATH_PREFIX=/ \
 
 ## Build Dependencies
 RUN apt install -y python3-pip && \
-    pip3 install psutil
+    pip3 install psutil libvirt-python
 COPY _root /
 VOLUME ["/config", "/install"]
 

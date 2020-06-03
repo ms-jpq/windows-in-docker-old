@@ -1,3 +1,5 @@
+# NOT DONE YET
+
 # VID - VM in Docker
 
 Docker + Windows + VNC + noVNC web UI

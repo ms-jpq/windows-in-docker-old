@@ -1,12 +1,12 @@
 # NOT DONE YET
 
-# VID - VM in Docker
+# WIND - Windows in Docker
 
 Docker + Windows + VNC + noVNC web UI
 
 WHY?
 
-So you can run Windows inside Docker inside a browser
+So you can run Windows inside KVM inside Docker inside a browser
 
 ## Usage
 

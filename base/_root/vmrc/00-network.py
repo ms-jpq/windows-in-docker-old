@@ -40,7 +40,6 @@ def main() -> None:
     write(temp.name, xml)
     call("virsh", "net-define", temp.name)
     call("virsh", "net-start", name)
-    call("virsh", "net-dumpxml", name)
 
 
 main()

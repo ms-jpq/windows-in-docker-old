@@ -4,7 +4,8 @@ from argparse import ArgumentParser, Namespace
 from multiprocessing import cpu_count
 from os import popen
 from subprocess import run
-from typing import Tuple
+from sys import stderr, stdout
+from typing import List, Tuple
 from uuid import uuid4
 
 from psutil import net_if_addrs
@@ -40,7 +41,7 @@ def p_network() -> str:
   return "\n".join(interfaces)
 
 
-def install(args: Namespace) -> str:
+def install(args: Namespace) -> List[str]:
   vmdk = f"{_vmdk_dir_}/{args.name}.img"
   bridge = ""  # "--network bridge={bridge},model=virtio"
   return f"""
@@ -69,10 +70,19 @@ def install(args: Namespace) -> str:
     --check disk_size=off
     {args.extra}
     {"--print-xml --dry-run" if args.dry else ""}
-    """
+    """.split()
 
 
 def main() -> None:
-  args = parse()
-  cmd = install(args)
-  print(args)
+  print("\n" * 10)
+  try:
+    args = parse()
+    cmd = install(args)
+    run(cmd, stdout=stdout, stderr=stderr)
+  except:
+    raise
+  finally:
+    print("\n" * 10)
+
+
+main()

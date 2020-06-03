@@ -47,6 +47,7 @@ def install(args: Namespace) -> List[str]:
     --virt-type kvm
     --os-variant=win10
     --vcpus {args.cpus},sockets=1
+    --cpu host-passthrough
     --memory {args.memory}
     --controller type=scsi,model=virtio-scsi
     --disk path={vmdk},size={args.disk_size},format=raw,sparse=true,bus=scsi,discard=unmap,io=threads,cache=none

@@ -37,7 +37,8 @@ def parse() -> Namespace:
 
 def p_network() -> str:
   interfaces = (f"--network {name},model=virtio"
-                for name in net_if_addrs().keys())
+                for name in net_if_addrs().keys()
+                if name != "lo")
   return "\n".join(interfaces)
 
 
@@ -78,7 +79,8 @@ def main() -> None:
   try:
     args = parse()
     cmd = install(args)
-    run(cmd, stdout=stdout, stderr=stderr)
+    ret = run(cmd, stdout=stdout, stderr=stderr)
+    exit(ret.returncode)
   except:
     raise
   finally:

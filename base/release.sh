@@ -5,7 +5,7 @@ set -o pipefail
 
 RELEASE="$1"
 
-IMAGE="msjpq/kvm-base:$RELEASE"
+IMAGE="msjpq/kvm-windows:$RELEASE"
 
 cd "$(dirname "$0")"
 docker build -t "$IMAGE" . -f "$RELEASE/Dockerfile"

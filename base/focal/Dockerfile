@@ -13,7 +13,7 @@ RUN tar xzf /_install/s6-overlay-amd64.tar.gz -C / --exclude="./bin" && \
 ENTRYPOINT ["/init"]
 
 
-## KVM
+## KVM-QEMU
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
     apt install -y \
@@ -48,7 +48,9 @@ ENV PATH_PREFIX=/ \
     PAGE_TITLE=KVM
 
 
-## All Dependencies Satisfied
+## Build Dependencies
+RUN apt install -y python3-pip && \
+    pip3 install psutil
 COPY _root /
 
 

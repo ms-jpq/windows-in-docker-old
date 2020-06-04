@@ -47,15 +47,17 @@ RUN cd /_install && \
     mv noVNC-${NO_VNC_VER} /novnc && \
     mv websockify-${WEB_SOCK_VER} /novnc/utils/websockify && \
     ln -s /usr/bin/python2 /usr/bin/python
-EXPOSE 8080
 ENV PATH_PREFIX=/ \
     VNC_RESIZE=scale \
     RECON_DELAY=250 \
     PAGE_TITLE=KVM
+EXPOSE 8080
 
 
 ## Build Dependencies
-RUN apt install -y \
+ADD https://raw.githubusercontent.com/LuRsT/hr/master/hr /usr/local/bin
+RUN chmod +x /usr/local/bin/hr && \
+    apt install -y \
     python3 \
     python3-pip && \
     pip3 install \
@@ -63,11 +65,13 @@ RUN apt install -y \
     psutil \
     libvirt-python
 COPY _root /
-ADD https://raw.githubusercontent.com/LuRsT/hr/master/hr /usr/local/bin
-RUN chmod +x /usr/local/bin/hr
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
     VM_NAME=wind
 VOLUME ["/config", "/install"]
+
+
+# Debug
+RUN apt install -y iputils-ping uml-utilities virt-manager
 
 
 # Cleanup

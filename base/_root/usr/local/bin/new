@@ -48,7 +48,7 @@ def install(args: Namespace, vmdk: str) -> List[str]:
   network = "--network network={direct},model=virtio"
   return f"""
     virt-install
-    --boot {"menu=on" if args.bios else "uefi"}
+    --boot {"cdrom,hd" if args.bios else "uefi"}
     --virt-type kvm
     --os-variant=win10
     --vcpus {args.cpus},sockets=1

@@ -18,7 +18,6 @@ ENTRYPOINT ["/init"]
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
     apt install -y \
-    dnsmasq \
     iptables \
     bridge-utils \
     qemu-kvm \
@@ -63,3 +62,10 @@ RUN apt autoremove -y && \
     apt clean && \
     rm -r /_install
 
+
+# Debug
+RUN apt install -y \
+    ping \
+    curl \
+    wget \
+    net-tools

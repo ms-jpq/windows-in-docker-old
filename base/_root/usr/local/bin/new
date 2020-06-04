@@ -3,7 +3,7 @@
 set -eu
 set -o pipefail
 
-s6-svwait /var/run/s6/services/network
+s6-svwait /var/run/s6/services/net-define-done
 
 /vmrc/new_win10.py "$@"
 

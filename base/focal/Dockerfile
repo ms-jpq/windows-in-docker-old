@@ -49,6 +49,14 @@ ENV PATH_PREFIX=/ \
     PAGE_TITLE=KVM
 
 
+# Debug
+RUN apt install -y \
+    iputils-ping \
+    curl \
+    wget \
+    net-tools
+
+
 ## Build Dependencies
 RUN apt install -y python3-pip && \
     pip3 install psutil libvirt-python
@@ -62,10 +70,3 @@ RUN apt autoremove -y && \
     apt clean && \
     rm -r /_install
 
-
-# Debug
-RUN apt install -y \
-    ping \
-    curl \
-    wget \
-    net-tools

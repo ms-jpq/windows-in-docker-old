@@ -54,20 +54,20 @@ ENV PATH_PREFIX=/ \
     PAGE_TITLE=KVM
 
 
-# Debug
-RUN apt install -y \
-    iputils-ping \
-    curl \
-    net-tools \
-    nano
-
-
 ## Build Dependencies
 RUN apt install -y python3-pip && \
     pip3 install psutil libvirt-python
 COPY _root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1
 VOLUME ["/config", "/install"]
+
+
+# Debug
+RUN apt install -y \
+    iputils-ping \
+    curl \
+    net-tools \
+    nano
 
 
 # Cleanup

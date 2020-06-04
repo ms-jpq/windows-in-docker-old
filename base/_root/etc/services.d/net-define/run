@@ -7,8 +7,8 @@ cd /vmrc || exit 1
 
 s6-svwait /var/run/s6/services/libvirtd
 
-virsh net-define /vmrc/br0.xml
-virsh net-start br0
+virsh net-define /vmrc/macvtap0.xml
+virsh net-start macvtap0
 
 echo >&69
 

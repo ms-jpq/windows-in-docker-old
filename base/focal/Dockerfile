@@ -55,19 +55,16 @@ ENV PATH_PREFIX=/ \
 
 
 ## Build Dependencies
-RUN apt install -y python3-pip && \
-    pip3 install psutil libvirt-python
+RUN apt install -y \
+    python3 \
+    python3-pip && \
+    pip3 install \
+    jinja2 \
+    psutil \
+    libvirt-python
 COPY _root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1
 VOLUME ["/config", "/install"]
-
-
-# Debug
-RUN apt install -y \
-    iputils-ping \
-    curl \
-    net-tools \
-    nano
 
 
 # Cleanup

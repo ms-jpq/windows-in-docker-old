@@ -1,0 +1,8 @@
+<network>
+  <name>macvtap0</name>
+  <forward mode="bridge">
+    {% for interface in interfaces %}
+    <interface dev="{{ interface }}"/>
+    {% endfor %}
+  </forward>
+</network>

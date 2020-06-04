@@ -38,6 +38,7 @@ def parse() -> Namespace:
 
 def install(args: Namespace) -> List[str]:
   vmdk = f"{_vmdk_dir_}/{args.name}.img"
+  bridge = "macvtap0"
   return f"""
     virt-install
     {"" if args.bios else "--boot uefi"}
@@ -48,7 +49,7 @@ def install(args: Namespace) -> List[str]:
     --memory {args.memory}
     --controller type=scsi,model=virtio-scsi
     --disk path={vmdk},size={args.disk_size},format=raw,sparse=true,bus=scsi,discard=unmap,io=threads,cache=none
-    --network bridge=br0,model=virtio
+    --network bridge={bridge},model=virtio
     --graphics vnc,listen=0.0.0.0
     --video qxl,ram={args.vram}
     --channel unix,target_type=virtio,name=org.qemu.guest_agent.0

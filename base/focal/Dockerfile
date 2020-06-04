@@ -58,8 +58,8 @@ ENV PATH_PREFIX=/ \
 RUN apt install -y \
     iputils-ping \
     curl \
-    wget \
-    net-tools
+    net-tools \
+    nano
 
 
 ## Build Dependencies

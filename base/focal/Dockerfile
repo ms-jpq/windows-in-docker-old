@@ -33,6 +33,7 @@ EXPOSE 5900
 ## Bridging
 RUN apt install -y \
     iptables \
+    dnsmasq \
     bridge-utils
 
 

@@ -57,9 +57,7 @@ EXPOSE 8080
 ## Build Dependencies
 ADD https://raw.githubusercontent.com/LuRsT/hr/master/hr /usr/local/bin
 RUN chmod +x /usr/local/bin/hr && \
-    apt install -y \
-    python3 \
-    python3-pip && \
+    apt install -y python3 python3-pip && \
     pip3 install \
     jinja2 \
     psutil \
@@ -71,7 +69,7 @@ VOLUME ["/config", "/install"]
 
 
 # Debug
-RUN apt install -y iputils-ping uml-utilities virt-manager
+RUN apt install -y iputils-ping
 
 
 # Cleanup

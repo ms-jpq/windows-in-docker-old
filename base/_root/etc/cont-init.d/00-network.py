@@ -17,6 +17,7 @@ def main() -> None:
                            for name in net_if_addrs().keys()
                            if name != "lo"]
   call("brctl", "addbr", "br0")
+  call("brctl", "setfd", "br0", "0")
   for interface in interfaces:
     pass
     # call("brctl", "addif", "br0", interface)

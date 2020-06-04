@@ -19,7 +19,6 @@ def parse() -> Namespace:
   parser = ArgumentParser()
 
   parser.add_argument("-d", "--dry", action="store_true")
-  parser.add_argument("-n", "--name", required=True)
   parser.add_argument("-c", "--cpus", default=cpu_count())
   parser.add_argument("-m", "--memory", default=4000)
   parser.add_argument("-s", "--disk-size", default=100)
@@ -27,6 +26,7 @@ def parse() -> Namespace:
   parser.add_argument("--vram", default=256000)
   parser.add_argument("--bios", action="store_true", default=False)
 
+  parser.add_argument("-n", "--name", default="wind")
   parser.add_argument(
       "--install-media", default=f"{_install_dir_}/windows.iso")
   parser.add_argument("--install-drivers",

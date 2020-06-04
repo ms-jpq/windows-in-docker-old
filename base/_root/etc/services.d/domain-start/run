@@ -5,5 +5,17 @@ set -o pipefail
 
 s6-svwait -U /var/run/s6/services/net-define
 
+VMDK="/config"
+DOMAIN_XML="$VMDK/$VM_NAME.xml"
+
+if [[ -f "$DOMAIN_XML" ]]
+then
+  virsh define "$DOMAIN_XML"
+else
+  hr
+  >&2 echo WARNING -- VM Not Found
+  >&2 echo Build VM using 'CMD :: new'
+  hr
+fi
 
 sleep infinity

@@ -91,7 +91,7 @@ def main() -> None:
     else:
       cmd = install(args, vmdk)
       call(cmd.split())
-      dump_xml()
+      dump_xml(args)
   except:
     raise
   finally:

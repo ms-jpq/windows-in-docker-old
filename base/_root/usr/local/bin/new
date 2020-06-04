@@ -12,7 +12,6 @@ from psutil import net_if_addrs
 
 _install_dir_ = "/install"
 _vmdk_dir_ = "/config"
-_sound_ = "hda"
 _bridge_ = ""
 
 
@@ -42,8 +41,6 @@ def install(args: Namespace) -> List[str]:
   return f"""
     virt-install
     {"" if args.bios else "--boot uefi"}
-    --noautoconsole
-    --features kvm_hidden=on
     --virt-type kvm
     --os-variant=win10
     --vcpus {args.cpus},sockets=1
@@ -57,8 +54,6 @@ def install(args: Namespace) -> List[str]:
     --channel unix,target_type=virtio,name=org.qemu.guest_agent.0
     --disk {args.install_media},device=cdrom
     --disk {args.install_drivers},device=cdrom
-    --qemu-commandline="-soundhw"
-    --qemu-commandline="{_sound_}"
     --qemu-commandline="-uuid"
     --qemu-commandline="{uuid4()}"
     --name {args.name}

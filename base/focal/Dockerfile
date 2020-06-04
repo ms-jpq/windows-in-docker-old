@@ -54,6 +54,7 @@ ENV PATH_PREFIX=/ \
 RUN apt install -y python3-pip && \
     pip3 install psutil libvirt-python
 COPY _root /
+ENV S6_CMD_WAIT_FOR_SERVICES=1
 VOLUME ["/config", "/install"]
 
 

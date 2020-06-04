@@ -10,5 +10,6 @@ s6-svwait /var/run/s6/services/libvirtd
 virsh net-define /vmrc/br0.xml
 virsh net-start br0
 
+echo >&69
 
 sleep infinity

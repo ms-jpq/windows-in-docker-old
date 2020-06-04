@@ -3,6 +3,7 @@
 from argparse import ArgumentParser, Namespace
 from multiprocessing import cpu_count
 from os import chdir, popen
+from os.path import isfile
 from subprocess import run
 from sys import stderr, stdout
 from typing import List, Tuple
@@ -36,8 +37,7 @@ def parse() -> Namespace:
   return parser.parse_args()
 
 
-def install(args: Namespace) -> List[str]:
-  vmdk = f"{_vmdk_dir_}/{args.name}.img"
+def install(args: Namespace, vmdk: str) -> List[str]:
   direct = "macvtap0"
   network = "--network network={direct},model=virtio"
   return f"""
@@ -70,10 +70,14 @@ def main() -> None:
   print("\n" * 10)
   try:
     args = parse()
-    cmd = install(args)
-    print(cmd)
-    ret = run(cmd.split(), stdout=stdout, stderr=stderr)
-    exit(ret.returncode)
+    vmdk = f"{_vmdk_dir_}/{args.name}.img"
+    if isfile(vmdk):
+      print(f"ERROR :: {args.name} already exists!", file=stderr)
+      exit(1)
+    else:
+      cmd = install(args, vmdk)
+      ret = run(cmd.split(), stdout=stdout, stderr=stderr)
+      exit(ret.returncode)
   except:
     raise
   finally:

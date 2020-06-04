@@ -1,6 +1,6 @@
 <network>
   <name>br0</name>
   <forward mode="bridge">
-    <interface dev="br0"/>
   </forward>
+  <bridge name="br0"/>
 </network>

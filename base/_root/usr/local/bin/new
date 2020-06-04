@@ -5,7 +5,6 @@ from multiprocessing import cpu_count
 from os import chdir, popen
 from os.path import isfile
 from subprocess import run
-from sys import stderr, stdout
 from typing import List, Tuple
 from uuid import uuid4
 
@@ -13,7 +12,13 @@ from psutil import net_if_addrs
 
 _install_dir_ = "/install"
 _vmdk_dir_ = "/config"
-_bridge_ = ""
+
+
+def call(args: List[str], capture=False) -> str:
+  ret = run(args, capture_output=capture)
+  if ret.returncode != 0:
+    exit(ret.returncode)
+  return ret.stdout.decode()
 
 
 def parse() -> Namespace:
@@ -65,6 +70,14 @@ def install(args: Namespace, vmdk: str) -> List[str]:
     """
 
 
+def dump_xml(args: Namespace) -> None:
+  vmrc = f"{_vmdk_dir_}/{args.name}.xml"
+  xml = call(["virsh", "dumpxml", args.name], capture=True)
+  with open(vmrc, "w") as fd:
+    fd.write(xml)
+  print(xml)
+
+
 def main() -> None:
   chdir(_install_dir_)
   print("\n" * 10)
@@ -76,8 +89,8 @@ def main() -> None:
       exit(1)
     else:
       cmd = install(args, vmdk)
-      ret = run(cmd.split(), stdout=stdout, stderr=stderr)
-      exit(ret.returncode)
+      call(cmd.split())
+      dump_xml()
   except:
     raise
   finally:

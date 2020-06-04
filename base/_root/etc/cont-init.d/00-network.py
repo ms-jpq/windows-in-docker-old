@@ -32,8 +32,9 @@ def render_j2(dest: str, values: Dict[str, Any]) -> None:
   full, _ = splitext(dest)
   base = basename(full)
   parent = dirname(full)
+  template = basename(dest)
   j2 = build_j2(parent)
-  content = j2.get_template(dest).render(**values)
+  content = j2.get_template(template).render(**values)
   write(full, content)
 
 

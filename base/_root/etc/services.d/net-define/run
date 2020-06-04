@@ -9,6 +9,7 @@ s6-svwait /var/run/s6/services/libvirtd
 
 virsh net-define /vmrc/macvtap0.xml
 virsh net-start macvtap0
+virsh net-dumpxml macvtap0
 
 echo >&69
 

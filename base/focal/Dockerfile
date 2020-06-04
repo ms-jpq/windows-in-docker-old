@@ -18,8 +18,6 @@ ENTRYPOINT ["/init"]
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
     apt install -y \
-    iptables \
-    bridge-utils \
     qemu-kvm \
     ovmf \
     libvirt-daemon \
@@ -30,6 +28,12 @@ RUN groupadd kvm && \
     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq
 EXPOSE 5900
+
+
+## Bridging
+RUN apt install -y \
+    iptables \
+    bridge-utils
 
 
 ## NOVNC

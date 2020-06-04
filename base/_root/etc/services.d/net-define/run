@@ -3,14 +3,12 @@
 set -eu
 set -o pipefail
 
-cd /vmrc || exit 1
-
 s6-svwait /var/run/s6/services/libvirtd
 
-virsh net-define /vmrc/macvtap0.xml
-virsh net-autostart macvtap0
-virsh net-start macvtap0
-virsh net-dumpxml macvtap0
+virsh net-define /vmrc/br0.xml
+virsh net-autostart br0
+virsh net-start br0
+virsh net-dumpxml br0
 
 echo >&69
 

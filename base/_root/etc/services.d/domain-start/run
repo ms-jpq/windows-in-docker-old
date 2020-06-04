@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bash
+
+set -eu
+set -o pipefail
+
+s6-svwait -U /var/run/s6/services/net-define
+
+
+sleep infinity

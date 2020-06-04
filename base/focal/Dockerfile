@@ -63,7 +63,10 @@ RUN apt install -y \
     psutil \
     libvirt-python
 COPY _root /
-ENV S6_CMD_WAIT_FOR_SERVICES=1
+ADD https://raw.githubusercontent.com/LuRsT/hr/master/hr /usr/local/bin
+RUN chmod +x /usr/local/bin/hr
+ENV S6_CMD_WAIT_FOR_SERVICES=1 \
+    VM_NAME=wind
 VOLUME ["/config", "/install"]
 
 

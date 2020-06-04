@@ -2,7 +2,7 @@
 
 from argparse import ArgumentParser, Namespace
 from multiprocessing import cpu_count
-from os import chdir, popen
+from os import chdir, environ, popen
 from os.path import isfile
 from subprocess import run
 from sys import stderr
@@ -33,7 +33,7 @@ def parse() -> Namespace:
   parser.add_argument("--vram", default=256000)
   parser.add_argument("--bios", action="store_true", default=False)
 
-  parser.add_argument("-n", "--name", default="wind")
+  parser.add_argument("-n", "--name", default=environ["VM_NAME"])
   parser.add_argument(
       "--install-media", default=f"{_install_dir_}/windows.iso")
   parser.add_argument("--install-drivers",
@@ -44,8 +44,8 @@ def parse() -> Namespace:
 
 
 def install(args: Namespace, vmdk: str) -> List[str]:
-  direct = "macvtap0"
-  network = "--network network={direct},model=virtio"
+  br = "br0"
+  network = "--network bridge={br},model=virtio"
   return f"""
     virt-install
     --boot {"cdrom,hd" if args.bios else "uefi"}
@@ -56,7 +56,7 @@ def install(args: Namespace, vmdk: str) -> List[str]:
     --memory {args.memory}
     --controller type=scsi,model=virtio-scsi
     --disk path={vmdk},size={args.disk_size},format=raw,sparse=true,bus=scsi,discard=unmap,io=threads,cache=none
-    --network none
+    {network}
     --graphics vnc,listen=0.0.0.0
     --video qxl,ram={args.vram}
     --channel unix,target_type=virtio,name=org.qemu.guest_agent.0

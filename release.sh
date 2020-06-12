@@ -3,14 +3,13 @@
 set -eu
 set -o pipefail
 
-RELEASE="$1"
-
-IMAGE="msjpq/kvm-windows:$RELEASE"
+IMAGE="msjpq/kvm-windows:latest"
 
 cd "$(dirname "$0")"
-docker build -t "$IMAGE" . -f "$RELEASE/Dockerfile"
+docker build -t "$IMAGE" . -f "Dockerfile"
 
-if [[ $# -gt 1 ]]
+if [[ $# -gt 0 ]]
 then
   docker push "$IMAGE"
 fi
+

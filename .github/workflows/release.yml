@@ -29,5 +29,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_USERNAME }}/kvm-windows
           tags: ${{ matrix.codename }}
-          path: base
-          Dockerfile: base/${{ matrix.codename }}/Dockerfile
+

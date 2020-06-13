@@ -36,7 +36,8 @@ RUN pacman -S --noconfirm \
 ADD https://github.com/novnc/noVNC/archive/v${NO_VNC_VER}.zip /_install
 ADD https://github.com/novnc/websockify/archive/v${WEB_SOCK_VER}.zip /_install
 RUN cd /_install && \
-    pacman -S --noconfirm unzip python2 nginx gettext && \
+    pacman -S --noconfirm unzip nginx gettext inetutils python-pip && \
+    pip3 install numpy && \
     unzip v${NO_VNC_VER}.zip && \
     unzip v${WEB_SOCK_VER}.zip && \
     mv noVNC-${NO_VNC_VER} /novnc && \
@@ -57,6 +58,6 @@ VOLUME ["/config", "/install"]
 
 
 ## Cleanup
-RUN pacman -Sc && \
+RUN pacman -Sc --noconfirm && \
     rm -r /_install
 

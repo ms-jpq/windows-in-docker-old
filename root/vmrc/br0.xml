@@ -1,6 +1,6 @@
 <network>
   <name>br0</name>
   <forward mode="bridge"/>
-  <bridge name="lxdbr0"/>
+  <bridge name="${LXDBR_NAME}"/>
 </network>
 

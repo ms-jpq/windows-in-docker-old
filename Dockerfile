@@ -52,6 +52,8 @@ EXPOSE 8080
 ## Build Dependencies
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
+    VIRTBR_NAME=windlibvirtbr \
+    LXDBR_NAME=windlxdbr \
     VM_NAME=wind
 VOLUME ["/config", "/install"]
 

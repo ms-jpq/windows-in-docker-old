@@ -17,23 +17,26 @@ ENTRYPOINT ["/init"]
 # ## KVM-QEMU
 RUN pacman -Sy && \
     pacman -S --noconfirm \
-      qemu-headless \
-      libvirt \
-      virt-install
+    qemu-headless \
+    libvirt \
+    virt-install
 # RUN groupadd --system kvm && \
 #     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
 #     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq
 EXPOSE 5900
 
+
 # ## Bridging
-RUN pacman -S lxd
+RUN pacman -S --noconfirm \
+    lxd \
+    iproute2
 
 
 # ## NOVNC
 ADD https://github.com/novnc/noVNC/archive/v${NO_VNC_VER}.zip /_install
 ADD https://github.com/novnc/websockify/archive/v${WEB_SOCK_VER}.zip /_install
 RUN cd /_install && \
-    apt install -y unzip python2 nginx gettext && \
+    pacman -S --noconfirm unzip python2 nginx gettext && \
     unzip v${NO_VNC_VER}.zip && \
     unzip v${WEB_SOCK_VER}.zip && \
     mv noVNC-${NO_VNC_VER} /novnc && \
@@ -52,10 +55,10 @@ EXPOSE 8080
 #     jinja2 \
 #     psutil \
 #     libvirt-python
-# COPY _root /
-# ENV S6_CMD_WAIT_FOR_SERVICES=1 \
-#     VM_NAME=wind
-# VOLUME ["/config", "/install"]
+COPY root /
+ENV S6_CMD_WAIT_FOR_SERVICES=1 \
+    VM_NAME=wind
+VOLUME ["/config", "/install"]
 
 
 

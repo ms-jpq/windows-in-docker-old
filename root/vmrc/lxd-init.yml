@@ -13,7 +13,7 @@ profiles:
   devices:
     eth0:
       name: eth0
-      network: lxdbr0
+      network: ${LXDBR_NAME}
       type: nic
   name: default
 cluster: null

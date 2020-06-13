@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/with-contenv bash
 
 set -eu
 set -o pipefail
@@ -6,9 +6,9 @@ set -o pipefail
 s6-svwait /var/run/s6/services/libvirtd
 
 virsh net-define /vmrc/br0.xml
-virsh net-autostart br0
-virsh net-start br0
-virsh net-dumpxml br0
+virsh net-autostart "$VIRTBR_NAME"
+virsh net-start "$VIRTBR_NAME"
+virsh net-dumpxml "$VIRTBR_NAME"
 
 
 echo >&69

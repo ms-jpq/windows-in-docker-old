@@ -20,6 +20,6 @@ echo "$TEMP" > /novnc/index.html
 TEMP="$(envsubst '${LXDBR_NAME},${VIRTBR_NAME}' < /vmrc/br0.xml)"
 echo "$TEMP" > /vmrc/br0.xml
 
-TEMP="$(envsubst '${LXDBR_NAME}' < /vmrc/lxd-init.xml)"
-echo "$TEMP" > /vmrc/lxd-init.xml
+TEMP="$(envsubst '${LXDBR_NAME}' < /vmrc/lxd-init.yml)"
+echo "$TEMP" > /vmrc/lxd-init.yml
 

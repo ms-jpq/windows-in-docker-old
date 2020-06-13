@@ -9,7 +9,6 @@ from sys import stderr
 from typing import List, Tuple
 from uuid import uuid4
 
-from psutil import net_if_addrs
 
 _install_dir_ = "/install"
 _vmdk_dir_ = "/config"
@@ -99,3 +98,4 @@ def main() -> None:
 
 
 main()
+

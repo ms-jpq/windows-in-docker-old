@@ -14,8 +14,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 ENTRYPOINT ["/init"]
 
 
-# ## KVM-QEMU
-RUN pacman -Sy && \
+## KVM-QEMU
+RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm \
     qemu-headless \
     libvirt \
@@ -26,13 +26,13 @@ RUN pacman -Sy && \
 EXPOSE 5900
 
 
-# ## Bridging
+## Bridging
 RUN pacman -S --noconfirm \
     lxd \
     iproute2
 
 
-# ## NOVNC
+## NOVNC
 ADD https://github.com/novnc/noVNC/archive/v${NO_VNC_VER}.zip /_install
 ADD https://github.com/novnc/websockify/archive/v${WEB_SOCK_VER}.zip /_install
 RUN cd /_install && \
@@ -48,13 +48,7 @@ ENV PATH_PREFIX=/ \
 EXPOSE 8080
 
 
-# ## Build Dependencies
-# RUN chmod +x /usr/local/bin/hr && \
-#     apt install -y python3 python3-pip && \
-#     pip3 install \
-#     jinja2 \
-#     psutil \
-#     libvirt-python
+## Build Dependencies
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
     VM_NAME=wind
@@ -62,8 +56,7 @@ VOLUME ["/config", "/install"]
 
 
 
-# # Cleanup
-# RUN apt autoremove -y && \
-#     apt clean && \
-#     rm -r /_install
+## Cleanup
+RUN pacman -Sc && \
+    rm -r /_install
 

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -eu
+set -o pipefail
+
+s6-svwait /var/run/s6/services/lxd
+
+yes yes | lxd init
+
+
+sleep infinity
+

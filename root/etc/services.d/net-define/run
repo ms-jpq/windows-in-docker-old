@@ -10,6 +10,7 @@ virsh net-autostart br0
 virsh net-start br0
 virsh net-dumpxml br0
 
-echo >&69
 
+echo >&69
 sleep infinity
+

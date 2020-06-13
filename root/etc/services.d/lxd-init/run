@@ -5,6 +5,16 @@ set -o pipefail
 
 s6-svwait /var/run/s6/services/lxd
 
+if [[ ! -f /vmrc/lxd-init-done ]]
+then
+  lxd init --preseed < /vmrc/lxd-init.yml
+  touch /vmrc/lxd-init-done
+  echo '-----------------------------------------------'
+  echo 'LXD INIT'
+  echo '-----------------------------------------------'
+fi
 
+
+echo >&420
 sleep infinity
 

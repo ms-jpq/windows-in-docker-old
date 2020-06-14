@@ -21,8 +21,9 @@ then
     sleep 3
   done
 else
-  >&2 printf '%s\n' WARNING -- VM Not Found
-  >&2 printf '%s\n' Build VM using "$IMAGE_NAME new"
+  >&2 printf '%s\n' 'WARNING -- VM Not Found'
+  >&2 printf '%s\n' 'Build VM using -- CMD new'
+  >&2 printf '%s\n' 'See https://github.com/ms-jpq/windows-in-docker'
   sleep infinity
 fi
 

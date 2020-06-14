@@ -12,7 +12,7 @@ elif grep -qs "^flags.* svm" /proc/cpuinfo; then
 fi
 
 if [ -n "$modlist" ]; then
-  modprobe -b "$modlist" || true
+  modprobe -b "kvm $modlist" || true
 fi
 
 

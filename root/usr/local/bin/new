@@ -44,7 +44,7 @@ def parse() -> Namespace:
 
 def install(args: Namespace, vmdk: str) -> List[str]:
   br = environ["VIRTBR_NAME"]
-  network = "--network bridge={br},model=virtio"
+  network = f"--network bridge={br},model=virtio"
   return f"""
     virt-install
     --boot {"cdrom,hd" if args.bios else "uefi"}

@@ -16,7 +16,7 @@ if [ -n "$modlist" ]; then
 fi
 
 
-mknod /dev/kvm c 10 232
-chown root:root /dev/kvm
-chmod g+rw /dev/kvm
+mknod /dev/kvm c 10 232 || true
+chown root:root /dev/kvm || true
+chmod g+rw /dev/kvm || true
 

@@ -42,7 +42,7 @@ def parse() -> Namespace:
 
 
 def install(args: Namespace, vmdk: str) -> List[str]:
-  br = environ["VIRTBR_NAME"]
+  br = environ["LXDBR_NAME"]
   network = f"--network bridge={br},model=virtio"
   media = join(_install_dir_, args.install_media)
   return f"""

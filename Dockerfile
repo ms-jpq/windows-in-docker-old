@@ -6,6 +6,7 @@ ARG WEB_SOCK_VER="0.9.0"
 
 RUN mkdir /_install
 
+
 ## S6 Overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_VER}/s6-overlay-amd64.tar.gz /_install
 RUN tar xzf /_install/s6-overlay-amd64.tar.gz -C / --exclude="./bin" && \

@@ -16,5 +16,5 @@ This image is rebuilt from CI every 24 hours.
 
 I have no time to test if Arch breaks something randomly, please file an issue.
 
-Works on my machine®.
+Works on my machine ™.
 

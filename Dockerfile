@@ -13,7 +13,7 @@ RUN git clone --depth=1 https://aur.archlinux.org/virtio-win.git && \
     cd virtio-win && \
     chgrp nobody "$PWD" && \
     chmod g+ws "$PWD" && \
-    sudo -u nobody makepkg -si
+    sudo -u nobody makepkg --install --nodeps --noconfirm
 
 
 ### ### ### ### ### ### ### ### ###

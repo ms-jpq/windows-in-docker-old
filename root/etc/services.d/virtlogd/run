@@ -3,4 +3,6 @@
 set -eu
 set -o pipefail
 
+
 /usr/sbin/virtlogd
+

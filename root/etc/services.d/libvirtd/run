@@ -3,4 +3,11 @@
 set -eu
 set -o pipefail
 
+
+s6-svwait /var/run/s6/services/dbus
+s6-svwait /var/run/s6/services/virtlogd
+s6-svwait /var/run/s6/services/virtlockd
+
+
 /usr/sbin/libvirtd
+

@@ -3,7 +3,9 @@
 set -eu
 set -o pipefail
 
+
 s6-svwait /var/run/s6/services/novnc
 
 
 /usr/sbin/nginx
+

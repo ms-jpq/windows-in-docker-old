@@ -14,11 +14,10 @@ _install_dir_ = "/install"
 _vmdk_dir_ = "/config"
 
 
-def call(args: List[str], capture=False) -> str:
-  ret = run(args, capture_output=capture)
+def call(args: List[str]) -> str:
+  ret = run(args)
   if ret.returncode != 0:
     exit(ret.returncode)
-  return ret.stdout.decode()
 
 
 def parse() -> Namespace:
@@ -70,14 +69,6 @@ def install(args: Namespace, vmdk: str) -> List[str]:
     """
 
 
-def dump_xml(args: Namespace) -> None:
-  vmrc = f"{_vmdk_dir_}/{args.name}.xml"
-  xml = call(["virsh", "dumpxml", args.name], capture=True)
-  with open(vmrc, "w") as fd:
-    fd.write(xml)
-  print(xml)
-
-
 def main() -> None:
   chdir(_install_dir_)
   print("\n" * 10)
@@ -90,7 +81,6 @@ def main() -> None:
     else:
       cmd = install(args, vmdk)
       call(cmd.split())
-      dump_xml(args)
   except:
     raise
   finally:

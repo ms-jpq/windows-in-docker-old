@@ -10,7 +10,7 @@ from typing import List, Tuple
 from uuid import uuid4
 
 
-_install_media_ = join("install", "windows.iso")
+_install_dir_ = "install"
 _drivers_ = join("drivers", "virtio-win.iso")
 _vmdk_dir_ = "config"
 
@@ -34,7 +34,8 @@ def parse() -> Namespace:
 
   parser.add_argument("-n", "--name", default=environ["VM_NAME"])
   parser.add_argument("--install-drivers", default=_drivers_)
-  parser.add_argument("--install-media", default=_install_media_)
+  parser.add_argument(
+      "--install-media", default=join(_install_dir_, "windows.iso"))
   parser.add_argument("--extra", default="")
 
   return parser.parse_args()
@@ -42,7 +43,8 @@ def parse() -> Namespace:
 
 def install(args: Namespace, vmdk: str) -> List[str]:
   br = environ["VIRTBR_NAME"]
-  network = f"--network {br},model=virtio"
+  network = f"--network bridge={br},model=virtio"
+  media = join(_install_dir_, args.install_media)
   return f"""
     virt-install
     --boot {"cdrom,hd" if args.bios else "uefi"}
@@ -57,7 +59,7 @@ def install(args: Namespace, vmdk: str) -> List[str]:
     --graphics vnc,listen=0.0.0.0
     --video qxl,ram={args.vram}
     --channel unix,target_type=virtio,name=org.qemu.guest_agent.0
-    --disk {args.install_media},device=cdrom
+    --disk {media},device=cdrom
     --disk {args.install_drivers},device=cdrom
     --qemu-commandline="-uuid"
     --qemu-commandline="{uuid4()}"
@@ -87,3 +89,4 @@ def main() -> None:
 
 
 main()
+

@@ -1,6 +1,0 @@
-<network>
-  <name>${VIRTBR_NAME}</name>
-  <forward mode="bridge"/>
-  <bridge name="${LXDBR_NAME}"/>
-</network>
-

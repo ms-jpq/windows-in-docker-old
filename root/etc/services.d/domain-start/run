@@ -4,24 +4,26 @@ set -eu
 set -o pipefail
 
 
+s6-svwait /var/run/s6/services/libvirtd
+
+
 VMDK="/config"
 DOMAIN_XML="$VMDK/$VM_NAME.xml"
 
 
-sleep infinity
-# if [[ -f "$DOMAIN_XML" ]]
-# then
-#   virsh define "$DOMAIN_XML"
-#   while true
-#   do
-#     virsh start "$VM_NAME" || true
-#     sleep 3
-#   done
-# else
-#   hr
-#   >&2 echo WARNING -- VM Not Found
-#   >&2 echo Build VM using 'CMD :: new'
-#   hr
-#   sleep infinity
-# fi
+if [[ -f "$DOMAIN_XML" ]]
+then
+  virsh define "$DOMAIN_XML"
+  while true
+  do
+    virsh start "$VM_NAME" || true
+    sleep 3
+  done
+else
+  hr
+  >&2 echo WARNING -- VM Not Found
+  >&2 echo Build VM using "$IMAGE_NAME new"
+  hr
+  sleep infinity
+fi
 

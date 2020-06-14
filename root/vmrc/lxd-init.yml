@@ -4,7 +4,7 @@ networks:
     ipv4.address: auto
     ipv6.address: auto
   description: ""
-  name: ${LXDBR_NAME}
+  name: ${VIRTBR_NAME}
   type: ""
 storage_pools: []
 profiles:
@@ -13,7 +13,7 @@ profiles:
   devices:
     eth0:
       name: eth0
-      network: ${LXDBR_NAME}
+      network: ${VIRTBR_NAME}
       type: nic
   name: default
 cluster: null

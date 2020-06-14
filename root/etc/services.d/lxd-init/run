@@ -11,7 +11,7 @@ bridges="$(brctl show | tail -n +2 | cut -f 1)"
 exists=0
 while read -r bridge
 do
-  if [[ "$bridge" == "$LXDBR_NAME" ]]
+  if [[ "$bridge" == "$VIRTBR_NAME" ]]
   then
     exists=1
   fi

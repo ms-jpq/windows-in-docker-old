@@ -11,6 +11,7 @@ from uuid import uuid4
 
 
 _install_dir_ = "/install"
+_drivers_dir_ = "/drivers"
 _vmdk_dir_ = "/config"
 
 
@@ -32,10 +33,10 @@ def parse() -> Namespace:
   parser.add_argument("--bios", action="store_true", default=False)
 
   parser.add_argument("-n", "--name", default=environ["VM_NAME"])
+  parser.add_argument("--install-drivers",
+                      default=f"{_drivers_dir_}/drivers.iso")
   parser.add_argument(
       "--install-media", default=f"{_install_dir_}/windows.iso")
-  parser.add_argument("--install-drivers",
-                      default=f"{_install_dir_}/drivers.iso")
   parser.add_argument("--extra", default="")
 
   return parser.parse_args()

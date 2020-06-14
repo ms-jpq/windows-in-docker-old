@@ -1,36 +1,20 @@
-# NOT DONE YET
-
 # WIND - Windows in Docker
 
-Docker + Windows + VNC + noVNC web UI
+Browser > VNC > Docker > Arch > KVM > Windows
 
-WHY?
+Oh, and it uses LXD too.
 
-So you can run Windows inside KVM inside Docker inside a browser
+## WHY?
 
-## Usage
+1) I use Arch btw
 
-### Common Environmental Variables
+2) Got this idea at 3AM
 
-#### VNC
+## Disclaimer
 
-- `-e SCR_WIDTH=1600`
-- `-e SCR_HEIGHT=900`
+This image is rebuilt from CI every 24 hours.
 
-#### noVNC UI
+I have no time to test if Arch breaks something randomly, please file an issue.
 
-- `-e PATH_PREFIX=/`
-- `-e VNC_RESIZE=scale|remote|off` remote = rescale remote desktop, scale = stretch remote desktop
-- `-e RECON_DELAY=250` reconnection delay (ms)
-- `-e PAGE_TITLE=🐳`
-
-### Common Ports
-
-- `-p 80:8080` noVNC web UI
-
-- `-p 5900:5900` VNC
-
-### Common Volumes
-
-- `-v ./appconfig:/config`
+Works on my machine®.
 

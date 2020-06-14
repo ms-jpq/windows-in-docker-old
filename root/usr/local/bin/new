@@ -86,6 +86,7 @@ def main() -> None:
       if ret.returncode != 0:
         _, cols = get_terminal_size()
         print("-" * cols, file=stderr)
+        print("!!ERROR!!")
         print("-" * cols, file=stderr)
       else:
         spit(vmrc, ret.stdout.decode())

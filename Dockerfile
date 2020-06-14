@@ -79,6 +79,6 @@ VOLUME ["/config", "/install"]
 
 
 ## Cleanup
-# RUN pacman -Sc --noconfirm && \
-#     rm -r /_install
+RUN pacman -Sc --noconfirm && \
+    rm -r /_install
 

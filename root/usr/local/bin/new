@@ -4,21 +4,20 @@ from argparse import ArgumentParser, Namespace
 from multiprocessing import cpu_count
 from os import chdir, environ, popen
 from os.path import isfile, join
-from subprocess import run
+from shutil import get_terminal_size
+from subprocess import PIPE, run
 from sys import stderr
 from typing import List, Tuple
 from uuid import uuid4
-
 
 _install_dir_ = "install"
 _drivers_ = join("drivers", "virtio-win.iso")
 _vmdk_dir_ = "config"
 
 
-def call(args: List[str]) -> str:
-  ret = run(args)
-  if ret.returncode != 0:
-    exit(ret.returncode)
+def spit(path: str, text: str) -> None:
+  with open(path, "w") as fd:
+    fd.write(text)
 
 
 def parse() -> Namespace:
@@ -76,12 +75,20 @@ def main() -> None:
   try:
     args = parse()
     vmdk = join(_vmdk_dir_, f"{args.name}.img")
-    if isfile(vmdk):
+    vmrc = join(_vmdk_dir_, f"{args.name}.xml")
+    if isfile(vmdk) or isfile(vmrc):
       print(f"ERROR :: {args.name} already exists!", file=stderr)
       exit(1)
     else:
       cmd = install(args, vmdk)
-      call(cmd.split())
+      run(cmd.split())
+      ret = run(["virsh", "dumpxml", args.name], stdout=PIPE)
+      if ret.returncode != 0:
+        _, cols = get_terminal_size()
+        print("-" * cols, file=stderr)
+        print("-" * cols, file=stderr)
+      else:
+        spit(vmrc, ret.stdout.decode())
   except:
     raise
   finally:

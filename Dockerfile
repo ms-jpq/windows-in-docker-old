@@ -60,8 +60,6 @@ RUN cd /_install && \
     cd virtio-win && \
     chgrp nobody "$PWD" && \
     chmod g+ws "$PWD" && \
-    setfacl -m u::rwx,g::rwx "$PWD" && \
-    setfacl -d --set u::rwx,g::rwx,o::- "$PWD" && \
     sudo -u nobody makepkg -si
 
 

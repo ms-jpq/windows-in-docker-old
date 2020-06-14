@@ -15,17 +15,18 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 ENTRYPOINT ["/init"]
 
 
+## AUR
+RUN pacman -Sy --needed --noconfirm \
+    base-devel git
+
+
 ## KVM-QEMU
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm \
     qemu-headless \
     libvirt \
     virt-install \
-    dmidecode \
-    virtio-win
-# RUN groupadd --system kvm && \
-#     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
-#     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq
+    dmidecode
 EXPOSE 5900
 
 
@@ -51,6 +52,17 @@ ENV PATH_PREFIX=/ \
     RECON_DELAY=250 \
     PAGE_TITLE=KVM
 EXPOSE 8080
+
+
+## Drivers
+RUN cd /_install && \
+    git clone https://aur.archlinux.org/virtio-win.git && \
+    cd virtio-win && \
+    chgrp nobody "$PWD" && \
+    chmod g+ws "$PWD" && \
+    setfacl -m u::rwx,g::rwx "$PWD" && \
+    setfacl -d --set u::rwx,g::rwx,o::- "$PWD" && \
+    sudo -u nobody makepkg -si
 
 
 ## Build Dependencies

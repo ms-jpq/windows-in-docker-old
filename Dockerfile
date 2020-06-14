@@ -1,3 +1,24 @@
+FROM archlinux:latest AS build
+
+## AUR
+RUN pacman -Sy --needed --noconfirm \
+    base-devel git
+COPY build /
+
+
+## Drivers
+RUN cd /_install && \
+    git clone --depth=1 https://aur.archlinux.org/virtio-win.git && \
+    cd virtio-win && \
+    chgrp nobody "$PWD" && \
+    chmod g+ws "$PWD" && \
+    sudo -u nobody makepkg -si
+
+
+### ### ### ### ### ### ### ### ###
+### ### ### ### ### ### ### ### ###
+
+
 FROM archlinux:latest
 
 ARG S6_VER="2.0.0.1"
@@ -13,11 +34,6 @@ RUN tar xzf /_install/s6-overlay-amd64.tar.gz -C / --exclude="./bin" && \
     tar xzf /_install/s6-overlay-amd64.tar.gz -C /usr ./bin
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 ENTRYPOINT ["/init"]
-
-
-## AUR
-RUN pacman -Sy --needed --noconfirm \
-    base-devel git
 
 
 ## KVM-QEMU
@@ -52,15 +68,6 @@ ENV PATH_PREFIX=/ \
     RECON_DELAY=250 \
     PAGE_TITLE=KVM
 EXPOSE 8080
-
-
-## Drivers
-RUN cd /_install && \
-    git clone --depth=1 https://aur.archlinux.org/virtio-win.git && \
-    cd virtio-win && \
-    chgrp nobody "$PWD" && \
-    chmod g+ws "$PWD" && \
-    sudo -u nobody makepkg -si
 
 
 ## Build Dependencies

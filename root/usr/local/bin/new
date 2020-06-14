@@ -43,7 +43,7 @@ def parse() -> Namespace:
 
 
 def install(args: Namespace, vmdk: str) -> List[str]:
-  br = environ["VIRTBR_NAME"]
+  br = environ["LXDBR_NAME"]
   network = f"--network bridge={br},model=virtio"
   return f"""
     virt-install

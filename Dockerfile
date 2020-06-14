@@ -83,7 +83,6 @@ RUN pacman -Sc --noconfirm && \
     rm -r /_install
 
 
-RUN groupadd --system kvm && \
-    useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
+RUN useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq
 

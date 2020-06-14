@@ -20,10 +20,8 @@ then
     sleep 3
   done
 else
-  hr
   >&2 printf '%s\n' WARNING -- VM Not Found
   >&2 printf '%s\n' Build VM using "$IMAGE_NAME new"
-  hr
   sleep infinity
 fi
 

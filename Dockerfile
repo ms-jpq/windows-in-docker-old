@@ -49,7 +49,8 @@ EXPOSE 5900
 RUN pacman -S --noconfirm \
     lxd \
     iproute2 \
-    bridge-utils
+    bridge-utils \
+    jq
 
 
 ## NOVNC

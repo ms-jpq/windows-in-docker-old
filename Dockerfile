@@ -3,7 +3,7 @@
 FROM archlinux:latest AS build
 
 ## AUR
-RUN pacman -Sy --needed --noconfirm \
+RUN pacman -Sy --noconfirm \
     base-devel git
 COPY build /
 

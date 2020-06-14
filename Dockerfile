@@ -60,7 +60,6 @@ ENV S6_CMD_WAIT_FOR_SERVICES=1 \
 VOLUME ["/config", "/install"]
 
 
-
 ## Cleanup
 RUN pacman -Sc --noconfirm && \
     rm -r /_install

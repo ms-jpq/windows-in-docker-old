@@ -4,7 +4,8 @@ set -eu
 set -o pipefail
 
 
-s6-svwait /var/run/s6/services/libvirtd
+s6-svwait /var/run/s6/services/lxd-init
+s6-svwait /var/run/s6/services/network-init
 
 
 VMDK="/config"

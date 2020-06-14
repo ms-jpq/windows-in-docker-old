@@ -20,3 +20,6 @@ printf '%s' "$TEMP" > /novnc/index.html
 TEMP="$(envsubst '${VIRTBR_NAME}' < /vmrc/lxd-init.yml)"
 printf '%s' "$TEMP" > /vmrc/lxd-init.yml
 
+TEMP="$(envsubst '${MACVTAP_NAME},${MACVTAP_IF}' < /vmrc/lxd-init.yml)"
+printf '%s' "$TEMP" > /vmrc/lxd-init.yml
+

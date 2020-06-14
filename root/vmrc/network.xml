@@ -1,0 +1,7 @@
+<network>
+  <name>${MACVTAP_NAME}</name>
+  <forward mode="bridge">
+    <interface dev="${MACVTAP_IF}"/>
+  </forward>
+</network>
+

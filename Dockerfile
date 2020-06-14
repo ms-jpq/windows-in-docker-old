@@ -56,7 +56,7 @@ EXPOSE 8080
 
 ## Drivers
 RUN cd /_install && \
-    git clone https://aur.archlinux.org/virtio-win.git && \
+    git clone --depth=1 https://aur.archlinux.org/virtio-win.git && \
     cd virtio-win && \
     chgrp nobody "$PWD" && \
     chmod g+ws "$PWD" && \

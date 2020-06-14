@@ -29,7 +29,8 @@ EXPOSE 5900
 ## Bridging
 RUN pacman -S --noconfirm \
     lxd \
-    iproute2
+    iproute2 \
+    bridge-utils
 
 
 ## NOVNC
@@ -52,8 +53,8 @@ EXPOSE 8080
 ## Build Dependencies
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
-    VIRTBR_NAME=windlibvirtbr \
-    LXDBR_NAME=windlxdbr \
+    VIRTBR_NAME=virtbr0 \
+    LXDBR_NAME=lxdbr0 \
     VM_NAME=wind
 VOLUME ["/config", "/install"]
 

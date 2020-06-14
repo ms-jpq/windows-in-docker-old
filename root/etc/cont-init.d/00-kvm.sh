@@ -17,6 +17,6 @@ fi
 
 
 mknod /dev/kvm c 10 232 || true
-chown root:root /dev/kvm || true
+chown root:kvm /dev/kvm || true
 chmod g+rw /dev/kvm || true
 

@@ -1,3 +1,5 @@
+### ### ### ### ### ### ### ### ###
+### ### ### ### ### ### ### ### ###
 FROM archlinux:latest AS build
 
 ## AUR
@@ -7,8 +9,7 @@ COPY build /
 
 
 ## Drivers
-RUN cd /_install && \
-    git clone --depth=1 https://aur.archlinux.org/virtio-win.git && \
+RUN git clone --depth=1 https://aur.archlinux.org/virtio-win.git && \
     cd virtio-win && \
     chgrp nobody "$PWD" && \
     chmod g+ws "$PWD" && \
@@ -17,8 +18,6 @@ RUN cd /_install && \
 
 ### ### ### ### ### ### ### ### ###
 ### ### ### ### ### ### ### ### ###
-
-
 FROM archlinux:latest
 
 ARG S6_VER="2.0.0.1"
@@ -70,8 +69,8 @@ ENV PATH_PREFIX=/ \
 EXPOSE 8080
 
 
-## Build Dependencies
-COPY root /
+## Dependencies
+COPY root /usr/share/virtio/ /drivers/
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
     VIRTBR_NAME=virtbr0 \
     LXDBR_NAME=lxdbr0 \

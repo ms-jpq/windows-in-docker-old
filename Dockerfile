@@ -13,7 +13,7 @@ RUN git clone --depth=1 https://aur.archlinux.org/virtio-win.git && \
     cd virtio-win && \
     chgrp nobody "$PWD" && \
     chmod g+ws "$PWD" && \
-    sudo -u nobody makepkg -i
+    sudo -u nobody makepkg -si
 
 
 ### ### ### ### ### ### ### ### ###

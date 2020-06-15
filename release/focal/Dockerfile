@@ -1,3 +1,4 @@
+FROM msjpq/kvm-windows-build:latest AS build
 FROM ubuntu:focal
 
 ARG S6_VER="2.0.0.1"
@@ -55,7 +56,7 @@ EXPOSE 8080
 
 
 ## Dependencies
-COPY --from=msjpq/kvm-windows-build /usr/share/virtio/ /drivers/
+COPY --from=build /usr/share/virtio/ /drivers/
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
     VIRT_NAT_NAME=windbr0 \

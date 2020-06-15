@@ -32,15 +32,14 @@ def spit(path: str, text: str) -> None:
 def parse() -> Namespace:
   parser = ArgumentParser()
 
-  parser.add_argument("-d", "--dry", action="store_true")
+  parser.add_argument("-d", "--dry-run", action="store_true")
   parser.add_argument("-c", "--cpus", default=cpu_count())
   parser.add_argument("-m", "--memory", default=4000)
-  parser.add_argument("-s", "--disk-size", default=100)
+  parser.add_argument("-s", "--size", default=100)
 
   parser.add_argument("--vram", default=256000)
   parser.add_argument("--bios", action="store_true", default=False)
 
-  parser.add_argument("--install-drivers", default=_drivers_)
   parser.add_argument("--install-media", default="windows.iso")
   parser.add_argument("--extra", default="")
 
@@ -50,6 +49,7 @@ def parse() -> Namespace:
 def install(args: Namespace, vmdk: str) -> List[str]:
   name = environ["VM_NAME"]
   net_nat = f"--network network={environ['VIRT_NAT_NAME']},model=virtio"
+  net_macvtap = f"--network network={environ['VIRT_NAT_NAME']},model=virtio"
   media = join(_install_dir_, args.install_media)
   return f"""
     virt-install
@@ -60,19 +60,19 @@ def install(args: Namespace, vmdk: str) -> List[str]:
     --cpu host-passthrough
     --memory {args.memory}
     --controller type=scsi,model=virtio-scsi
-    --disk path={vmdk},size={args.disk_size},format=raw,sparse=true,bus=scsi,discard=unmap,io=threads,cache=none
+    --disk path={vmdk},size={args.size},format=raw,sparse=true,bus=scsi,discard=unmap,io=threads,cache=none
     {net_nat}
     --graphics vnc,listen=0.0.0.0
     --video qxl,ram={args.vram}
     --channel unix,target_type=virtio,name=org.qemu.guest_agent.0
     --disk {media},device=cdrom
-    --disk {args.install_drivers},device=cdrom
+    --disk {_drivers_},device=cdrom
     --qemu-commandline="-uuid"
     --qemu-commandline="{uuid4()}"
     --name {name}
     --check disk_size=off
     {args.extra}
-    {"--print-xml --dry-run" if args.dry else ""}
+    {"--print-xml --dry-run" if args.dry_run else ""}
     """
 
 

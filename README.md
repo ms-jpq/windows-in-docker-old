@@ -1,14 +1,22 @@
 # Windows in Docker | WIND
 
-Browser > VNC > Docker > Arch > KVM > Windows
-
-Oh, and it uses LXD too.
+Browser > VNC > Docker > KVM > Windows
 
 ## WHY?
 
-1) I use Arch btw
+QEMU + KVM has a bunch of moving parts, not very user friendly.
 
-2) Got this idea at 3AM
+This image is super user friendly, it comes with:
+
+1) Browser UI
+
+2) NAT + Lan networking out of the box
+
+3) Literally single line install
+
+4) Built-in Windows drivers
+
+5) Crazy easy customizations, ie. `--cpus=9 --memory=6024 --size=120`
 
 ## Instructions
 
@@ -36,10 +44,6 @@ Run
 
 #### Virtualization
 
-LXD is used to solely provide a network bridge friendly to most network typology
-
-- `-e VIRT_MACVTAP_NAME=lxdbr0` will create this bridge if does it not exist
-
 Libvirt look for `VM_NAME.xml` to boot.
 
 - `-e VM_NAME=wind`
@@ -55,12 +59,6 @@ Libvirt look for `VM_NAME.xml` to boot.
 - `-v ./vm_data:/config`
 
 - `-v ./install_media:/install`
-
-## Disclaimer
-
-This image is rebuilt from CI every 24 hours.
-
-I have no time to test if Arch randomly breaks something upstream, please file an issue if something breaks.
 
 Works on my machine ™.
 

@@ -56,17 +56,19 @@ def main() -> None:
     BEGIN = str(next(it))
     END = str(new.broadcast_address - 1)
 
+    nat_rc = join(_vmrc_, _nat_rc_)
     env = {**environ,
            "MASK": MASK, "ROUTER": ROUTER,
            "BEGIN": BEGIN, "END": END}
-    subst = "${ROUTER},${MASK},${BEGIN},${END}"
-    xml = slurp(_nat_rc_)
+    subst = "${VIRT_NAT_NAME},${ROUTER},${MASK},${BEGIN},${END}"
+    xml = slurp(nat_rc)
     ret = run(["envsubst", subst], env=env, input=xml, stdout=PIPE)
 
     if ret.returncode != 0:
       exit(ret.returncode)
     else:
-      spit(join(_vmrc_, _nat_rc_), ret.stdout)
+      spit(nat_rc, ret.stdout)
+      print(ret.stdout.decode())
 
   else:
     print(f"ERROR! -- No IPv4 addr for {mac_lf}", file=stderr)

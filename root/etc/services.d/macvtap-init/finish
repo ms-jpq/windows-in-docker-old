@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bash
+
+set -eu
+set -o pipefail
+
+
+virsh net-destroy "$VIRT_MACVTAP_NAME"
+

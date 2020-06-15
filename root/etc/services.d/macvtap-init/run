@@ -1,0 +1,17 @@
+#!/usr/bin/with-contenv bash
+
+set -eu
+set -o pipefail
+
+
+s6-svwait /var/run/s6/services/libvirtd
+
+
+virsh net-define /vmrc/macvtap.xml
+virsh net-start "$VIRT_MACVTAP_NAME"
+virsh net-dumpxml "$VIRT_MACVTAP_NAME"
+
+
+printf '\n' >&420
+sleep infinity
+

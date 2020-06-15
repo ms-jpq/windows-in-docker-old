@@ -8,9 +8,7 @@ from shutil import get_terminal_size
 from socket import AddressFamily
 from subprocess import PIPE, run
 from sys import stderr, stdout
-from typing import Any, Dict, List, Iterable, Iterator
-
-from psutil import net_if_addrs
+from typing import Any, Dict, List, Iterable, Iterator, Optional
 
 
 _vmrc_ = "/vmrc"
@@ -47,32 +45,25 @@ def spit(path: str, data: bytes) -> None:
 
 def check_br() -> None:
   out = call_into("ip", "-j", "link", "show", "type", "bridge")
-  json = loads(out.decode())
-  bridges = (br["ifname"] for br in json)
-  bridge = environ["VIRT_NAT_NAME"]
-  if bridge in bridges:
-    bold_print(f"ERROR! -- Already Exists :: {bridge}")
+  bridges = loads(out.decode())
+  br_names = (br["ifname"] for br in bridges)
+  name = environ["VIRT_NAT_NAME"]
+
+  if name in br_names:
+    bold_print(f"ERROR! -- Already Exists :: {name}")
     exit(1)
 
 
-def usable_ipv4(addr: Any) -> bool:
-  return (addr.family == AddressFamily.AF_INET
-          and not ip_address(addr.address).is_loopback)
-
-
-def p_network(address: Any) -> IPv4Network:
-  addr = address.address
-  mask = address.netmask
-  network = ip_network(f"{addr}/{mask}", False)
-  return network
-
-
 def p_networks() -> Iterable[IPv4Network]:
-  if_addrs = net_if_addrs()
-  for addrs in if_addrs.values():
-    for addr in addrs:
-      if usable_ipv4(addr):
-        yield p_network(addr)
+  out = call_into("ip", "-4", "-j", "route")
+  routes = loads(out.decode())
+  for route in routes:
+    dst = route["dst"]
+    try:
+      if "/" in dst:
+        yield ip_network(dst)
+    except:
+      pass
 
 
 def p_non_overlapping_exclusions(networks: List[IPv4Network]) -> Iterable[IPv4Network]:

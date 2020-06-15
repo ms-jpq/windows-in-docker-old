@@ -18,7 +18,7 @@ RUN git clone --depth=1 https://aur.archlinux.org/virtio-win.git && \
 
 ### ### ### ### ### ### ### ### ###
 ### ### ### ### ### ### ### ### ###
-FROM archlinux:latest
+FROM ubuntu:focal
 
 ARG S6_VER="2.0.0.1"
 ARG NO_VNC_VER="1.1.0"
@@ -36,17 +36,23 @@ ENTRYPOINT ["/init"]
 
 
 ## KVM-QEMU
-RUN pacman -Syu --noconfirm && \
-    pacman -S --noconfirm \
-    qemu-headless \
-    libvirt \
-    virt-install \
-    dmidecode \
-    ebtables \
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && \
+    apt install -y \
+    qemu-kvm \
+    ovmf \
+    libvirt-daemon \
+    libvirt-clients \
+    virt-top \
+    virtinst \
     iptables \
+    ebtables \
     dnsmasq \
     iproute2 \
-    jq
+    dmidecode
+RUN groupadd --system kvm && \
+    useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
+    useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq
 EXPOSE 5900
 
 
@@ -54,7 +60,8 @@ EXPOSE 5900
 ADD https://github.com/novnc/noVNC/archive/v${NO_VNC_VER}.zip /_install
 ADD https://github.com/novnc/websockify/archive/v${WEB_SOCK_VER}.zip /_install
 RUN cd /_install && \
-    pacman -S --noconfirm unzip nginx gettext inetutils python-pip && \
+    apt install -y unzip nginx gettext-base python3 python3-pip && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
     pip3 install numpy && \
     unzip v${NO_VNC_VER}.zip && \
     unzip v${WEB_SOCK_VER}.zip && \
@@ -79,6 +86,7 @@ VOLUME ["/config", "/install"]
 
 
 ## Cleanup
-RUN pacman -Sc --noconfirm && \
+RUN apt autoremove -y && \
+    apt clean && \
     rm -r /_install
 

@@ -21,7 +21,17 @@ def main() -> None:
   if address:
     addr = address.address
     mask = address.netmask
-    ip = ip_network(f"{addr}/{mask}", False)
+    network = ip_network(f"{addr}/{mask}", False)
+
+    prefix = network.prefixlen
+    int_addr = int(ip_address(addr))
+    complement = int_addr ^ (1 << (32 - prefix))
+
+    new_mask = prefix - 1
+    new_ip = ip_address(complement)
+    new_network = ip_network(f"{new_ip}/{new_mask}", False)
+
+    print(new_network)
   else:
     print(f"ERROR! -- No IPv4 addr for {mac_lf}", file=stderr)
     exit(1)

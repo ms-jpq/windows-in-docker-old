@@ -75,6 +75,7 @@ COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
     VIRT_NAT_NAME=br0 \
     VIRT_MACVTAP_NAME=lxdbr0 \
+    VIRT_MACVTAP_IF=eth0 \
     VM_NAME=wind
 VOLUME ["/config", "/install"]
 

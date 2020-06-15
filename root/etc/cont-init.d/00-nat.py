@@ -3,9 +3,10 @@
 from ipaddress import IPv4Address, IPv4Network, ip_address, ip_network
 from os import environ
 from os.path import join
+from shutil import get_terminal_size
 from socket import AddressFamily
 from subprocess import PIPE, run
-from sys import stderr
+from sys import stderr, stdout
 from typing import Any, Dict, List
 
 from psutil import net_if_addrs
@@ -22,6 +23,13 @@ private_ranges: List[IPv4Network] = [
 ]
 
 
+def bold_print(message: str, sep="-", file=stdout) -> None:
+  _, cols = get_terminal_size()
+  print(sep * cols, file=stderr)
+  print(message, file=stderr)
+  print(sep * cols, file=stderr)
+
+
 def slurp(path: str) -> bytes:
   with open(path, "rb") as fd:
     return fd.read()
@@ -30,6 +38,17 @@ def slurp(path: str) -> bytes:
 def spit(path: str, data: bytes) -> None:
   with open(path, "wb") as fd:
     fd.write(data)
+
+
+def check_br() -> None:
+  ret = run(["show-bridges"], stdout=PIPE)
+  if ret.returncode != 0:
+    exit(ret.returncode)
+  bridges = ret.stdout.decode().split("\n")
+  bridge = environ["VIRT_NAT_NAME"]
+  if bridge in bridges:
+    bold_print(f"ERROR! -- Already Exists :: {bridge}")
+    exit(1)
 
 
 def usable_ipv4(addr: Any) -> bool:
@@ -88,6 +107,7 @@ def envsubst(address: Any) -> None:
 
 
 def main() -> None:
+  check_br()
   addrs = p_addrs()
   if not addrs:
     raise Exception("Missing IPv4 if @ $VIRT_NAT_IF")

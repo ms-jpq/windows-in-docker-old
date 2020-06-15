@@ -9,5 +9,5 @@ s6-svwait /var/run/s6/services/virtlogd
 s6-svwait /var/run/s6/services/virtlockd
 
 
-/usr/sbin/libvirtd
+exec /usr/sbin/libvirtd
 

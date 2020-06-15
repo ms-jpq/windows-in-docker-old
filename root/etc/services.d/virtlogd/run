@@ -4,5 +4,5 @@ set -eu
 set -o pipefail
 
 
-/usr/sbin/virtlogd
+exec /usr/sbin/virtlogd
 

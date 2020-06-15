@@ -6,5 +6,5 @@ set -o pipefail
 
 mkdir -p /run/dbus/
 
-/usr/bin/dbus-daemon --system --nofork --nopidfile
+exec /usr/bin/dbus-daemon --system --nofork --nopidfile
 

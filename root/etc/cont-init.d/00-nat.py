@@ -33,11 +33,17 @@ def spit(path: str, data: bytes) -> None:
 
 
 def main() -> None:
-  mac_lf = environ["VIRT_MACVTAP_IF"]
   if_addrs = net_if_addrs()
+  names = (name
+           for name, addrs in if_addrs.items()
+           if name != "lo" and AddressFamily.AF_INET
+           in (addr.family for addr in addrs))
+  mac_lf = environ.get("VIRT_NAT_IF") or next(names)
+  addrs = if_addrs[mac_lf]
+  if not addrs:
+    raise Exception("Missing IPv4 if @ $VIRT_NAT_IF")
 
-  net_fam = {AddressFamily.AF_INET, AddressFamily.AF_INET6}
-  addresses = (addr for addr in if_addrs[mac_lf]
+  addresses = (addr for addr in addrs
                if addr.family == AddressFamily.AF_INET)
   address = next(addresses)
   if address:

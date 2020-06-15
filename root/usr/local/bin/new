@@ -34,7 +34,7 @@ def parse() -> Namespace:
   parser.add_argument("-n", "--name", default=environ["VM_NAME"])
   parser.add_argument("--install-drivers", default=_drivers_)
   parser.add_argument(
-      "--install-media", default=join(_install_dir_, "windows.iso"))
+      "--install-media", default="windows.iso")
   parser.add_argument("--extra", default="")
 
   return parser.parse_args()

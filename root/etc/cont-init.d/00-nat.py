@@ -60,9 +60,8 @@ def p_networks() -> Iterable[IPv4Network]:
   for route in routes:
     dst = route["dst"]
     try:
-      if "/" in dst:
-        yield ip_network(dst)
-    except:
+      yield ip_network(dst)
+    except ValueError:
       pass
 
 
@@ -88,8 +87,7 @@ def p_non_overlapping_exclusions(networks: List[IPv4Network]) -> Iterable[IPv4Ne
   for private_range in private_subnets():
     for network in networks:
       for exclusion in p_exclude(private_range, network):
-        if exclusion.num_addresses < 65535:
-          yield exclusion
+        yield exclusion
 
 
 def p_non_overlapping(networks: List[IPv4Network]) -> Iterable[IPv4Network]:

@@ -4,7 +4,7 @@ networks:
     ipv4.address: auto
     ipv6.address: auto
   description: ""
-  name: ${VIRTBR_NAME}
+  name: ${VIRT_MACVTAP_NAME}
   type: ""
 storage_pools: []
 profiles: []

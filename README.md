@@ -38,7 +38,7 @@ Run
 
 LXD is used to solely provide a network bridge friendly to most network typology
 
-- `-e VIRTBR_NAME=lxdbr0` will create this bridge if does it not exist
+- `-e VIRT_MACVTAP_NAME=lxdbr0` will create this bridge if does it not exist
 
 Libvirt look for `VM_NAME.xml` to boot.
 

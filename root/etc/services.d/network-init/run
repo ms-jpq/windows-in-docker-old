@@ -7,9 +7,9 @@ set -o pipefail
 s6-svwait /var/run/s6/services/libvirtd
 
 
-virsh net-define /vmrc/network.xml
-virsh net-start "$VIRTBR_INTERNAL"
-virsh net-dumpxml "$VIRTBR_INTERNAL"
+virsh net-define /vmrc/nat.xml
+virsh net-start "$VIRT_NAT_NAME"
+virsh net-dumpxml "$VIRT_NAT_NAME"
 
 
 printf '\n' >&69

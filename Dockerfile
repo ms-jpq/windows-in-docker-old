@@ -49,7 +49,6 @@ EXPOSE 5900
 RUN pacman -S --noconfirm \
     lxd \
     iproute2 \
-    bridge-utils \
     jq
 
 
@@ -74,8 +73,8 @@ EXPOSE 8080
 COPY --from=build /usr/share/virtio/ /drivers/
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
-    VIRTBR_INTERNAL=br0 \
-    VIRTBR_NAME=lxdbr0 \
+    VIRT_NAT_NAME=br0 \
+    VIRT_MACVTAP_NAME=lxdbr0 \
     VM_NAME=wind
 VOLUME ["/config", "/install"]
 

@@ -49,7 +49,7 @@ def parse() -> Namespace:
 
 def install(args: Namespace, vmdk: str) -> List[str]:
   name = environ["VM_NAME"]
-  net_nat = f"--network network={environ['VIRTBR_INTERNAL']},model=virtio"
+  net_nat = f"--network network={environ['VIRT_NAT_NAME']},model=virtio"
   media = join(_install_dir_, args.install_media)
   return f"""
     virt-install

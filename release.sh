@@ -6,8 +6,8 @@ cd "$(dirname "$0")"
 
 
 RELEASE="$1"
-BUILD="msjpq/windows-kvm-build:latest"
-IMAGE="msjpq/windows-kvm:$RELEASE"
+BUILD="msjpq/kvm-windows-build:latest"
+IMAGE="msjpq/kvm-windows:$RELEASE"
 
 
 docker build -t "$BUILD" . -f "build/Dockerfile"

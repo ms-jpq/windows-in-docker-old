@@ -1,7 +1,7 @@
 <network>
-  <name>${MACVTAP_NAME}</name>
+  <name>${VIRTBR_INTERNAL}</name>
   <forward mode="bridge">
-    <interface dev="${MACVTAP_IF}"/>
+    <interface dev="${VIRTBR_NAME}"/>
   </forward>
 </network>
 

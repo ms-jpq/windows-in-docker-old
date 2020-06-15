@@ -41,8 +41,7 @@ def parse() -> Namespace:
 
 
 def install(args: Namespace, vmdk: str) -> List[str]:
-  net1 = f"--network bridge={environ['VIRTBR_NAME']},model=virtio"
-  net2 = f"--network network={environ['MACVTAP_NAME']},model=virtio"
+  net = f"--network network={environ['VIRTBR_INTERNAL']},model=virtio"
   media = join(_install_dir_, args.install_media)
   return f"""
     virt-install
@@ -54,8 +53,7 @@ def install(args: Namespace, vmdk: str) -> List[str]:
     --memory {args.memory}
     --controller type=scsi,model=virtio-scsi
     --disk path={vmdk},size={args.disk_size},format=raw,sparse=true,bus=scsi,discard=unmap,io=threads,cache=none
-    {net1}
-    {net2}
+    {net}
     --graphics vnc,listen=0.0.0.0
     --video qxl,ram={args.vram}
     --channel unix,target_type=virtio,name=org.qemu.guest_agent.0

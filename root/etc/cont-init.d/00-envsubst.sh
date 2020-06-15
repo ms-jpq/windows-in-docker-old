@@ -17,6 +17,9 @@ export PAGE_PREFIX="${SOCKET_PREFIX:1}/"
 TEMP="$(envsubst '${PAGE_PREFIX},${PAGE_TITLE},${RECON_DELAY},${VNC_RESIZE}' < /novnc/index.html)"
 printf '%s' "$TEMP" > /novnc/index.html
 
+TEMP="$(envsubst '${VIRTBR_INTERNAL},${VIRTBR_NAME}' < /vmrc/network.xml)"
+printf '%s' "$TEMP" > /vmrc/network.xml
+
 TEMP="$(envsubst '${VIRTBR_NAME}' < /vmrc/lxd-init.yml)"
 printf '%s' "$TEMP" > /vmrc/lxd-init.yml
 

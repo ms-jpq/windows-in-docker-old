@@ -74,9 +74,8 @@ EXPOSE 8080
 COPY --from=build /usr/share/virtio/ /drivers/
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
+    VIRTBR_INTERNAL=br0 \
     VIRTBR_NAME=lxdbr0 \
-    MACVTAP_NAME=macvtap0 \
-    MACVTAP_IF=eth0 \
     VM_NAME=wind
 VOLUME ["/config", "/install"]
 

@@ -72,7 +72,7 @@ def private_subnets() -> Iterable[IPv4Network]:
       ip_network("10.0.0.0/8"),
   ]
   for private_range in private_ranges:
-    for i in range(16, 31):
+    for i in range(16, 30):
       yield from private_range.subnets(new_prefix=i)
 
 

@@ -24,6 +24,17 @@ def bold_print(message: str, sep="-", file=stdout) -> None:
   print(sep * cols, file=file)
 
 
+def call_into(prog: str,
+              *args: List[str],
+              input: bytes = None,
+              env: Dict[str, str] = None) -> bytes:
+  ret = run([prog, *args], input=input, env=env, stdout=PIPE)
+  if ret.returncode != 0:
+    exit(ret.returncode)
+  else:
+    return ret.stdout
+
+
 def slurp(path: str) -> bytes:
   with open(path, "rb") as fd:
     return fd.read()
@@ -35,10 +46,8 @@ def spit(path: str, data: bytes) -> None:
 
 
 def check_br() -> None:
-  ret = run(["ip", "-j", "link", "show", "type", "bridge"], stdout=PIPE)
-  if ret.returncode != 0:
-    exit(ret.returncode)
-  json = loads(ret.stdout.decode())
+  out = call_into("ip", "-j", "link", "show", "type", "bridge")
+  json = loads(out.decode())
   bridges = (br["ifname"] for br in json)
   bridge = environ["VIRT_NAT_NAME"]
   if bridge in bridges:
@@ -89,13 +98,10 @@ def p_non_overlapping(networks: List[IPv4Network]) -> Iterable[IPv4Network]:
 
 def envsubst(values: Dict[str, str], path: str) -> None:
   template = slurp(path)
-  subst = ",".join(f"${{key}}" for key in values.keys())
+  subst = ",".join("${" + key + "}" for key in values.keys())
   env = {**environ, **values}
-  ret = run(["envsubst", subst], env=env, input=template, stdout=PIPE)
-  if ret.returncode != 0:
-    exit(ret.returncode)
-  else:
-    spit(path, ret.stdout)
+  out = call_into("envsubst", subst, env=env, input=template)
+  spit(path, out)
 
 
 def main() -> None:
@@ -110,10 +116,10 @@ def main() -> None:
   END = str(subnet.broadcast_address - 1)
 
   nat_rc = join(_vmrc_, _nat_rc_)
-  env = {"VIRT_NAT_NAME": environ["VIRT_NAT_NAME"],
-         "MASK": MASK, "ROUTER": ROUTER,
-         "BEGIN": BEGIN, "END": END}
-  envsubst(env, nat_rc)
+  values = {"VIRT_NAT_NAME": environ["VIRT_NAT_NAME"],
+            "MASK": MASK, "ROUTER": ROUTER,
+            "BEGIN": BEGIN, "END": END}
+  envsubst(values, nat_rc)
 
 
 main()

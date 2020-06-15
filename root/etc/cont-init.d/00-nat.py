@@ -47,7 +47,8 @@ def main() -> None:
 
     exclusions = (exclusion
                   for pr in private_ranges
-                  for exclusion in pr.address_exclude(network))
+                  for exclusion in pr.address_exclude(network)
+                  if exclusion.num_addresses < 65535)
     new = next(exclusions)
     it = new.hosts()
 

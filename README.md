@@ -1,4 +1,4 @@
-# WIND - Windows in Docker
+# Windows in Docker | WIND
 
 Browser > VNC > Docker > Arch > KVM > Windows
 

@@ -2,6 +2,11 @@ name: CI
 
 on:
   push:
+    paths:
+      - ".github/**"
+      - "build/**"
+      - "release/**"
+      - "root/**"
     branches:
       - master
   pull_request:

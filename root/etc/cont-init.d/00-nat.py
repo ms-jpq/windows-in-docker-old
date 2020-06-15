@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/with-contenv python3
 
 from ipaddress import IPv4Address, IPv4Network, ip_address, ip_network
 from os import environ

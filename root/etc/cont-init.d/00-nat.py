@@ -41,48 +41,61 @@ def usable_ipv4(addr: Any) -> bool:
   return True
 
 
-def main() -> None:
+def p_addrs() -> List[Any]:
   if_addrs = net_if_addrs()
   names = (name
            for name, addrs in if_addrs.items()
            if any(usable_ipv4(addr) for addr in addrs))
   mac_lf = environ.get("VIRT_NAT_IF") or next(names)
   addrs = if_addrs[mac_lf]
+  return addrs
+
+
+def p_exclusions(network: IPv4Network) -> IPv4Network:
+  exclusions = (exclusion
+                for pr in private_ranges
+                for exclusion in pr.address_exclude(network)
+                if exclusion.num_addresses < 65535)
+  return exclusions
+
+
+def envsubst(address: Any) -> None:
+  addr = address.address
+  mask = address.netmask
+  network = ip_network(f"{addr}/{mask}", False)
+
+  exclusions = p_exclusions(network)
+  new = next(exclusions)
+  it = new.hosts()
+
+  MASK = str(new.netmask)
+  ROUTER = str(next(it))
+  BEGIN = str(next(it))
+  END = str(new.broadcast_address - 1)
+
+  nat_rc = join(_vmrc_, _nat_rc_)
+  env = {**environ,
+         "MASK": MASK, "ROUTER": ROUTER,
+         "BEGIN": BEGIN, "END": END}
+  subst = "${VIRT_NAT_NAME},${ROUTER},${MASK},${BEGIN},${END}"
+  xml = slurp(nat_rc)
+  ret = run(["envsubst", subst], env=env, input=xml, stdout=PIPE)
+
+  if ret.returncode != 0:
+    exit(ret.returncode)
+  else:
+    spit(nat_rc, ret.stdout)
+
+
+def main() -> None:
+  addrs = p_addrs()
   if not addrs:
     raise Exception("Missing IPv4 if @ $VIRT_NAT_IF")
 
-  addresses = (addr for addr in addrs
-               if addr.family == AddressFamily.AF_INET)
-  address = next(addresses)
+  address = next(addr for addr in addrs
+                 if addr.family == AddressFamily.AF_INET)
   if address:
-    addr = address.address
-    mask = address.netmask
-    network = ip_network(f"{addr}/{mask}", False)
-
-    exclusions = (exclusion
-                  for pr in private_ranges
-                  for exclusion in pr.address_exclude(network)
-                  if exclusion.num_addresses < 65535)
-    new = next(exclusions)
-    it = new.hosts()
-
-    MASK = str(new.netmask)
-    ROUTER = str(next(it))
-    BEGIN = str(next(it))
-    END = str(new.broadcast_address - 1)
-
-    nat_rc = join(_vmrc_, _nat_rc_)
-    env = {**environ,
-           "MASK": MASK, "ROUTER": ROUTER,
-           "BEGIN": BEGIN, "END": END}
-    subst = "${VIRT_NAT_NAME},${ROUTER},${MASK},${BEGIN},${END}"
-    xml = slurp(nat_rc)
-    ret = run(["envsubst", subst], env=env, input=xml, stdout=PIPE)
-
-    if ret.returncode != 0:
-      exit(ret.returncode)
-    else:
-      spit(nat_rc, ret.stdout)
+    envsubst(address)
 
   else:
     print(f"ERROR! -- No IPv4 addr for {mac_lf}", file=stderr)

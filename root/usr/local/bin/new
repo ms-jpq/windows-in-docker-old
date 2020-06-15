@@ -9,6 +9,8 @@ from subprocess import PIPE, run
 from sys import stderr
 from typing import List, Tuple
 from uuid import uuid4
+from xml.dom import minidom
+
 
 _install_dir_ = "install"
 _drivers_ = join("drivers", "virtio-win.iso")
@@ -74,6 +76,22 @@ def install(args: Namespace, vmdk: str) -> List[str]:
     """
 
 
+def post_process_xml(data: str) -> str:
+  try:
+    dom = minidom.parseString(data)
+    for disk in dom.getElementsByTagName("disk"):
+      device: str = disk.getAttribute("device")
+      if device == "cdrom":
+        for source in disk.getElementsByTagName("source"):
+          rom: str = source.getAttribute("file")
+          if rom.startswith(join("/", _install_dir_)):
+            disk.parentNode.removeChild(disk)
+    xml = dom.toxml()
+    return xml
+  except:
+    return data
+
+
 def main() -> None:
   chdir("/")
   print("\n" * 10)
@@ -91,7 +109,8 @@ def main() -> None:
       if ret.returncode != 0:
         bold_print("!! ERROR ^^^^")
       else:
-        xml = ret.stdout.decode()
+        data = ret.stdout.decode()
+        xml = post_process_xml(data)
         spit(vmrc, xml)
         bold_print(xml)
         bold_print(f"Dumped libvirt config -- {vmrc}")

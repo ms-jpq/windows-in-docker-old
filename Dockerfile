@@ -42,6 +42,9 @@ RUN pacman -Syu --noconfirm && \
     libvirt \
     virt-install \
     dmidecode \
+    ebtables \
+    iptables \
+    dnsmasq \
     iproute2
 EXPOSE 5900
 

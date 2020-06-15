@@ -1,6 +1,6 @@
 <network>
   <name>${VIRT_NAT_NAME}</name>
-  <forward mode="bridge"/>
   <bridge name="${VIRT_MACVTAP_NAME}"/>
+  <forward mode="bridge"/>
 </network>
 

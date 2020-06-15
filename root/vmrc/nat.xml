@@ -1,6 +1,11 @@
 <network>
   <name>${VIRT_NAT_NAME}</name>
-  <forward mode="bridge"/>
-  <bridge name="${VIRT_MACVTAP_NAME}"/>
+  <bridge name="${VIRT_NAT_NAME}"/>
+  <forward mode="nat"/>
+  <ip address="${ROUTER}" netmask="${MASK}">
+    <dhcp>
+      <range start="${BEGIN}" end="${END}"/>
+    </dhcp>
+  </ip>
 </network>
 

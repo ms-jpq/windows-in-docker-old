@@ -2,12 +2,17 @@
 
 from ipaddress import IPv4Address, IPv4Network, ip_address, ip_network
 from os import environ
+from os.path import join
 from socket import AddressFamily
-from subprocess import run
+from subprocess import PIPE, run
 from sys import stderr
 from typing import Any, Dict, List
 
 from psutil import net_if_addrs
+
+
+_vmrc_ = "/vmrc"
+_nat_rc_ = "nat.xml"
 
 
 private_ranges: List[IPv4Network] = [
@@ -15,6 +20,16 @@ private_ranges: List[IPv4Network] = [
     ip_network("172.16.0.0/12"),
     ip_network("192.168.0.0/16"),
 ]
+
+
+def slurp(path: str) -> bytes:
+  with open(path, "rb") as fd:
+    return fd.read()
+
+
+def spit(path: str, data: bytes) -> None:
+  with open(path, "wb") as fd:
+    fd.write(data)
 
 
 def main() -> None:
@@ -33,7 +48,25 @@ def main() -> None:
     exclusions = (exclusion
                   for pr in private_ranges
                   for exclusion in pr.address_exclude(network))
-    exclusion = next(exclusions)
+    new = next(exclusions)
+    it = new.hosts()
+
+    MASK = str(new.netmask)
+    ROUTER = str(next(it))
+    BEGIN = str(next(it))
+    END = str(new.broadcast_address - 1)
+
+    env = {**environ,
+           "MASK": MASK, "ROUTER": ROUTER,
+           "BEGIN": BEGIN, "END": END}
+    subst = "${ROUTER},${MASK},${BEGIN},${END}"
+    xml = slurp(_nat_rc_)
+    ret = run(["envsubst", subst], env=env, input=xml, stdout=PIPE)
+
+    if ret.returncode != 0:
+      exit(ret.returncode)
+    else:
+      spit(join(_vmrc_, _nat_rc_), ret.stdout)
 
   else:
     print(f"ERROR! -- No IPv4 addr for {mac_lf}", file=stderr)

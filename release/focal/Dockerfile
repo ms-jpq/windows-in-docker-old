@@ -55,7 +55,7 @@ EXPOSE 8080
 
 
 ## Dependencies
-COPY --from=build /usr/share/virtio/ /drivers/
+COPY --from=msjpq/kvm-windows-build /usr/share/virtio/ /drivers/
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
     VIRT_NAT_NAME=windbr0 \

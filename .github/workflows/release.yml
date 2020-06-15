@@ -11,7 +11,29 @@ on:
     - cron: "0 0 * * *" # daily
 
 jobs:
+  pull:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ secrets.DOCKER_USERNAME }}/kvm-windows-build
+          tags: latest
+          Dockerfile: build/Dockerfile
+
   build:
+    needs:
+      - pull
+    strategy:
+      matrix:
+        codename:
+          - focal
     runs-on: ubuntu-latest
 
     steps:
@@ -25,4 +47,5 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_USERNAME }}/kvm-windows
           tags: latest
+          Dockerfile: release/${{ matrix.codename }}/Dockerfile
 

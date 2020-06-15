@@ -2,14 +2,21 @@
 
 set -eu
 set -o pipefail
-
-IMAGE="msjpq/kvm-windows:latest"
-
 cd "$(dirname "$0")"
-docker build -t "$IMAGE" . -f "Dockerfile"
 
-if [[ $# -gt 0 ]]
+
+RELEASE="$1"
+BUILD="msjpq/windows-kvm-build:latest"
+IMAGE="msjpq/windows-kvm:$RELEASE"
+
+
+docker build -t "$BUILD" . -f "build/Dockerfile"
+docker build -t "$IMAGE" . -f "release/$RELEASE/Dockerfile"
+
+
+if [[ $# -gt 1 ]]
 then
+  docker push "$build"
   docker push "$IMAGE"
 fi
 

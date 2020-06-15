@@ -50,7 +50,7 @@ def check_br() -> None:
   name = environ["VIRT_NAT_NAME"]
 
   if name in br_names:
-    bold_print(f"ERROR! -- Already Exists :: {name}")
+    bold_print(f"ERROR! -- Bridge Already Exists :: {name}")
     exit(1)
 
 

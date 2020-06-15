@@ -1,7 +1,6 @@
 <network>
   <name>${VIRTBR_INTERNAL}</name>
-  <forward mode="bridge">
-    <interface dev="${VIRTBR_NAME}"/>
-  </forward>
+  <forward mode="bridge"/>
+  <bridge name="${VIRTBR_NAME}"/>
 </network>
 

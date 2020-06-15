@@ -66,15 +66,22 @@ def p_networks() -> Iterable[IPv4Network]:
       pass
 
 
+def p_exclude(parent: IPv4Network, child: IPv4Network) -> Iterable[IPv4Network]:
+  try:
+    yield from parent.address_exclude(child)
+  except ValueError:
+    yield parent
+
+
 def p_non_overlapping_exclusions(networks: List[IPv4Network]) -> Iterable[IPv4Network]:
   private_ranges: List[IPv4Network] = [
-      ip_network("10.0.0.0/8"),
-      ip_network("172.16.0.0/12"),
       ip_network("192.168.0.0/16"),
+      ip_network("172.16.0.0/12"),
+      ip_network("10.0.0.0/8"),
   ]
   for private_range in private_ranges:
     for network in networks:
-      for exclusion in private_range.address_exclude(network):
+      for exclusion in p_exclude(private_range, network):
         if exclusion.num_addresses < 65535:
           yield exclusion
 

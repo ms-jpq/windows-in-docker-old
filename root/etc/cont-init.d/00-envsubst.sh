@@ -20,6 +20,6 @@ printf '%s' "$TEMP" > /novnc/index.html
 TEMP="$(envsubst '${VIRT_NAT_NAME},${VIRT_MACVTAP_NAME}' < /vmrc/nat.xml)"
 printf '%s' "$TEMP" > /vmrc/nat.xml
 
-TEMP="$(envsubst '${VIRT_MACVTAP_NAME}' < /vmrc/lxd-init.yml)"
-printf '%s' "$TEMP" > /vmrc/lxd-init.yml
+TEMP="$(envsubst '${VIRT_MACVTAP_NAME}' < /vmrc/macvtap.xml)"
+printf '%s' "$TEMP" > /vmrc/macvtap.xml
 

@@ -41,15 +41,9 @@ RUN pacman -Syu --noconfirm && \
     qemu-headless \
     libvirt \
     virt-install \
-    dmidecode
+    dmidecode \
+    iproute2
 EXPOSE 5900
-
-
-## Bridging
-RUN pacman -S --noconfirm \
-    lxd \
-    iproute2 \
-    jq
 
 
 ## NOVNC
@@ -73,8 +67,8 @@ EXPOSE 8080
 COPY --from=build /usr/share/virtio/ /drivers/
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
-    VIRT_NAT_NAME=br0 \
-    VIRT_MACVTAP_NAME=lxdbr0 \
+    VIRT_NAT_NAME=windbr0 \
+    VIRT_MACVTAP_NAME=windmacvtap0 \
     VIRT_MACVTAP_IF=eth0 \
     VM_NAME=wind
 VOLUME ["/config", "/install"]

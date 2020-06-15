@@ -16,7 +16,7 @@ docker build -t "$IMAGE" . -f "release/$RELEASE/Dockerfile"
 
 if [[ $# -gt 1 ]]
 then
-  docker push "$build"
+  docker push "$BUILD"
   docker push "$IMAGE"
 fi
 

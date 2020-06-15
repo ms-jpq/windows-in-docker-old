@@ -45,7 +45,8 @@ RUN pacman -Syu --noconfirm && \
     ebtables \
     iptables \
     dnsmasq \
-    iproute2
+    iproute2 \
+    jq
 EXPOSE 5900
 
 

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -eu
+set -o pipefail
+
+
+ip -j link show type bridge | jq '.[]["ifname"]' -r
+

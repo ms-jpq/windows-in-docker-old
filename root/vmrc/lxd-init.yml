@@ -7,14 +7,6 @@ networks:
   name: ${VIRTBR_NAME}
   type: ""
 storage_pools: []
-profiles:
-- config: {}
-  description: ""
-  devices:
-    eth0:
-      name: eth0
-      network: ${VIRTBR_NAME}
-      type: nic
-  name: default
+profiles: []
 cluster: null
 

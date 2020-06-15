@@ -8,7 +8,6 @@ s6-svwait /var/run/s6/services/libvirtd
 
 
 virsh net-define /vmrc/network.xml
-virsh net-autostart "$VIRTBR_INTERNAL"
 virsh net-start "$VIRTBR_INTERNAL"
 virsh net-dumpxml "$VIRTBR_INTERNAL"
 

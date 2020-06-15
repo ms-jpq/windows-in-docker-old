@@ -32,12 +32,20 @@ def spit(path: str, data: bytes) -> None:
     fd.write(data)
 
 
+def usable_ipv4(addr: Any) -> bool:
+  if addr.family != AddressFamily.AF_INET:
+    return False
+  ip = ip_address(addr.address)
+  if ip.is_loopback:
+    return False
+  return True
+
+
 def main() -> None:
   if_addrs = net_if_addrs()
   names = (name
            for name, addrs in if_addrs.items()
-           if name != "lo" and AddressFamily.AF_INET
-           in (addr.family for addr in addrs))
+           if any(usable_ipv4(addr) for addr in addrs))
   mac_lf = environ.get("VIRT_NAT_IF") or next(names)
   addrs = if_addrs[mac_lf]
   if not addrs:
@@ -75,7 +83,6 @@ def main() -> None:
       exit(ret.returncode)
     else:
       spit(nat_rc, ret.stdout)
-      print(ret.stdout.decode())
 
   else:
     print(f"ERROR! -- No IPv4 addr for {mac_lf}", file=stderr)

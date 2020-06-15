@@ -38,7 +38,6 @@ def parse() -> Namespace:
   parser.add_argument("--vram", default=256000)
   parser.add_argument("--bios", action="store_true", default=False)
 
-  parser.add_argument("-n", "--name", default=environ["VM_NAME"])
   parser.add_argument("--install-drivers", default=_drivers_)
   parser.add_argument("--install-media", default="windows.iso")
   parser.add_argument("--extra", default="")
@@ -47,6 +46,7 @@ def parse() -> Namespace:
 
 
 def install(args: Namespace, vmdk: str) -> List[str]:
+  name = environ["VM_NAME"]
   net = f"--network network={environ['VIRTBR_INTERNAL']},model=virtio"
   media = join(_install_dir_, args.install_media)
   return f"""
@@ -67,7 +67,7 @@ def install(args: Namespace, vmdk: str) -> List[str]:
     --disk {args.install_drivers},device=cdrom
     --qemu-commandline="-uuid"
     --qemu-commandline="{uuid4()}"
-    --name {args.name}
+    --name {name}
     --check disk_size=off
     {args.extra}
     {"--print-xml --dry-run" if args.dry else ""}

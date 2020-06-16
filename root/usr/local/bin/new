@@ -55,6 +55,7 @@ def install(name, args: Namespace, vmdk: str) -> List[str]:
   media = join(_install_dir_, args.windows_img)
   return f"""
     virt-install
+    --events on_crash=restart,on_reboot=restart,on_poweroff=destory
     --boot {"cdrom,hd" if args.bios else "uefi"}
     --virt-type kvm
     --os-variant=win10

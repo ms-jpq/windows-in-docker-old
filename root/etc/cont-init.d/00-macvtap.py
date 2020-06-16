@@ -87,7 +87,11 @@ def main() -> None:
   print(out.decode(), end="")
 
   macvtap_rc = join(_vmrc_, _macvtap_rc_)
-  values = {"VIRT_MACVTAP_NAME": environ["VIRT_MACVTAP_NAME"]}
+  values = {
+      "VIRT_MACVTAP_NAME":
+      environ["VIRT_MACVTAP_NAME"],
+      "VIRT_MACVTAP_IF":
+      environ["VIRT_MACVTAP_IF"]}
   envsubst(values, macvtap_rc)
 
 

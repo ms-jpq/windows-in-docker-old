@@ -3,11 +3,6 @@
 set -eu
 set -o pipefail
 
-if [[ -n "$VIRT_MACVTAP_IF" ]]
-then
-  virsh net-destroy "$VIRT_MACVTAP_NAME"
-  ip link del link "$VIRT_MACVTAP_NAME"
-fi
 
 printf '%s\n' '-------------------------------'
 printf '%s\n' 'DEINIT -- MACVTAP'

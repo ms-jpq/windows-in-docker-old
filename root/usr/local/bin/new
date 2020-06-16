@@ -89,14 +89,15 @@ def main() -> None:
     else:
       cmd = install(name, args, vmdk)
       run(cmd)
-      ret = run(["virsh", "dumpxml", name], stdout=PIPE)
-      if ret.returncode != 0:
-        bold_print("!! ERROR ^^^^")
-      else:
-        xml = ret.stdout.decode()
-        spit(vmrc, xml)
-        bold_print(xml)
-        bold_print(f"Dumped libvirt config -- {vmrc}")
+      if not args.dry_run:
+        ret = run(["virsh", "dumpxml", name], stdout=PIPE)
+        if ret.returncode != 0:
+          bold_print("!! ERROR ^^^^")
+        else:
+          xml = ret.stdout.decode()
+          spit(vmrc, xml)
+          bold_print(xml)
+          bold_print(f"Dumped libvirt config -- {vmrc}")
   except:
     raise
   finally:

@@ -17,6 +17,7 @@ def call_into(prog: str,
               *args: List[str],
               input: bytes = None,
               env: Dict[str, str] = None) -> bytes:
+  print(" ".join((prog, *args)))
   ret = run([prog, *args], input=input, env=env, stdout=PIPE)
   if ret.returncode != 0:
     exit(ret.returncode)
@@ -62,24 +63,24 @@ def setup_link(name: str, lf_name: str) -> None:
 
 
 def main() -> None:
-  name = environ["VIRT_MACVTAP_NAME"]
+  vbr_name = environ["VIRT_MACVTAP_NAME"]
   if_name = environ["VIRT_MACVTAP_IF"]
-  setup_link(name, if_name)
+  setup_link(vbr_name, if_name)
 
-  out = call_into("ip", "link", "set", name, "address", new_mac())
+  out = call_into("ip", "link", "set", vbr_name, "address", new_mac())
   print(out.decode(), end="")
 
-  out = call_into("ip", "link", "set", name, "up")
+  out = call_into("ip", "link", "set", vbr_name, "up")
   print(out.decode(), end="")
 
-  base = join("/sys/devices/virtual/net", name)
+  base = join("/sys/devices/virtual/net", vbr_name)
   re: Pattern = re_compile(r"tap\d+")
   for name in listdir(base):
     if re.match(name):
       spec = join(base, name, "dev")
       major, minor = slurp(spec).decode().split(":")
 
-  out = call_into("mknod", join("/dev", name), "c", major, minor)
+  out = call_into("mknod", join("/dev", vbr_name), "c", major, minor)
   print(out.decode(), end="")
 
   macvtap_rc = join(_vmrc_, _macvtap_rc_)

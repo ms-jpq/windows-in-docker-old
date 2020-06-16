@@ -46,10 +46,11 @@ def parse() -> Namespace:
   return parser.parse_args()
 
 
-def install(args: Namespace, vmdk: str) -> List[str]:
-  name = environ["VM_NAME"]
+def install(name, args: Namespace, vmdk: str) -> List[str]:
   net_nat = f"--network network={environ['VIRT_NAT_NAME']},model=virtio"
-  net_macvtap = f"--network network={environ['VIRT_NAT_NAME']},model=virtio"
+  net_macvtap = ""
+  if environ["VIRT_MACVTAP_IF"]:
+    net_macvtap = f"--network network={environ['VIRT_NAT_NAME']},model=virtio"
   media = join(_install_dir_, args.install_media)
   return f"""
     virt-install
@@ -96,17 +97,18 @@ def post_process_xml(data: str) -> str:
 def main() -> None:
   chdir("/")
   print("\n" * 10)
+  name = environ["VM_NAME"]
   try:
     args = parse()
-    vmdk = join(_vmdk_dir_, f"{args.name}.img")
-    vmrc = join(_vmdk_dir_, f"{args.name}.xml")
+    vmdk = join(_vmdk_dir_, f"{name}.img")
+    vmrc = join(_vmdk_dir_, f"{name}.xml")
     if isfile(vmdk) or isfile(vmrc):
-      print(f"ERROR :: {args.name} already exists!", file=stderr)
+      print(f"ERROR :: {name} already exists!", file=stderr)
       exit(1)
     else:
-      cmd = install(args, vmdk)
+      cmd = install(name, args, vmdk)
       run(cmd.split())
-      ret = run(["virsh", "dumpxml", args.name], stdout=PIPE)
+      ret = run(["virsh", "dumpxml", name], stdout=PIPE)
       if ret.returncode != 0:
         bold_print("!! ERROR ^^^^")
       else:

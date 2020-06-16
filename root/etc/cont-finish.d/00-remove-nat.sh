@@ -4,7 +4,7 @@ set -eu
 set -o pipefail
 
 
-virsh net-destroy "$VIRT_NAT_NAME"
+ip link del "$VIRT_NAT_NAME" type bridge
 
 
 printf '%s\n' '-------------------------------'

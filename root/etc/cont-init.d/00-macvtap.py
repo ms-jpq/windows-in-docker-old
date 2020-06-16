@@ -65,6 +65,9 @@ def setup_link(name: str, lf_name: str) -> None:
 def main() -> None:
   vbr_name = environ["VIRT_MACVTAP_NAME"]
   if_name = environ["VIRT_MACVTAP_IF"]
+  if not if_name:
+    return
+
   setup_link(vbr_name, if_name)
 
   out = call_into("ip", "link", "set", vbr_name, "address", new_mac())

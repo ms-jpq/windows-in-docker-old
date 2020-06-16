@@ -51,7 +51,7 @@ def parse() -> Namespace:
 def install(name, args: Namespace, vmdk: str) -> List[str]:
   cmds = [
       "virt-install",
-      "--events", "on_crash=restart,on_reboot=restart,on_poweroff=destory",
+      "--events", "on_crash=restart,on_reboot=restart,on_poweroff=destroy",
       "--virt-type", "kvm",
       "--os-variant", args.os,
       "--vcpus", f"{args.cpus},sockets=1",

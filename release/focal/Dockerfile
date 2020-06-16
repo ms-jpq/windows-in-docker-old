@@ -30,8 +30,9 @@ RUN apt update && \
     iptables \
     ebtables \
     dnsmasq \
+    dmidecode \
     iproute2 \
-    dmidecode
+    bridge-utils
 RUN groupadd --system kvm && \
     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq

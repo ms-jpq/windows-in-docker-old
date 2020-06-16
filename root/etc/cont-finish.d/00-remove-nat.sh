@@ -4,8 +4,8 @@ set -eu
 set -o pipefail
 
 
-ip link del "$VIRT_NAT_NAME"
-ip link del "$VIRT_NAT_NAME-nic"
+ip link set "$VIRT_NAT_NAME" down
+brctl delbr "$VIRT_NAT_NAME"
 
 
 printf '%s\n' '-------------------------------'

@@ -1,8 +1,16 @@
 #!/usr/bin/with-contenv python3
 
-
-from os import environ
+from os import environ, listdir
+from os.path import join
+from random import randint
+from re import Pattern, compile as re_compile
 from subprocess import PIPE, run
+from time import sleep
+from typing import Dict, List
+
+
+_vmrc_ = "/vmrc"
+_macvtap_rc_ = "macvtap.xml"
 
 
 def call_into(prog: str,
@@ -34,7 +42,50 @@ def envsubst(values: Dict[str, str], path: str) -> None:
   spit(path, out)
 
 
+def new_mac() -> str:
+  def fx(): return format(randint(0, 255), "x")
+  return f"02:00:00:{fx()}:{fx()}:{fx()}"
+
+
+def setup_link(name: str, lf_name: str) -> None:
+  i = 0
+  while True:
+    ret = run(["ip", "link", "add", "link", lf_name, "name",
+               name, "type", "macvtap", "mode", "bridge"])
+    if ret.returncode == 0:
+      return
+    elif i == 5:
+      exit(1)
+    else:
+      i += 1
+      sleep(1)
+
+
 def main() -> None:
-  if_name = environ.get("VIRT_MACVTAP_IF")
-  pass
+  name = environ["VIRT_MACVTAP_NAME"]
+  if_name = environ["VIRT_MACVTAP_IF"]
+  setup_link(name, if_name)
+
+  out = call_into("ip", "link", "set", name, "address", new_mac())
+  print(out.decode(), end="")
+
+  out = call_into("ip", "link", "set", name, "up")
+  print(out.decode(), end="")
+
+  base = join("/sys/devices/virtual/net", name)
+  re: Pattern = re_compile(r"tap\d+")
+  for name in listdir(base):
+    if re.match(name):
+      spec = join(base, name, "dev")
+      major, minor = slurp(spec).decode().split(":")
+
+  out = call_into("mknod", join("/dev", name), "c", major, minor)
+  print(out.decode(), end="")
+
+  macvtap_rc = join(_vmrc_, _macvtap_rc_)
+  values = {"VIRT_MACVTAP_NAME": environ["VIRT_MACVTAP_NAME"]}
+  envsubst(values, macvtap_rc)
+
+
+main()
 

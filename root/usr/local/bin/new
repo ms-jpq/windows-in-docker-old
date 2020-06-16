@@ -35,65 +35,44 @@ def parse() -> Namespace:
   parser.add_argument("windows_img")
 
   parser.add_argument("-d", "--dry-run", action="store_true")
-  parser.add_argument("-c", "--cpus", default=cpu_count())
-  parser.add_argument("-m", "--memory", default=4000)
-  parser.add_argument("-s", "--size", default=100)
+  parser.add_argument("-c", "--cpus", type=int, default=cpu_count())
+  parser.add_argument("-m", "--memory", type=int, default=4000)
+  parser.add_argument("-s", "--size", type=int, default=100)
 
-  parser.add_argument("--vram", default=256000)
+  parser.add_argument("--vram", type=int, default=256000)
   parser.add_argument("--bios", action="store_true", default=False)
 
+  parser.add_argument("--os", default="win10")
   parser.add_argument("--extra", default="")
 
   return parser.parse_args()
 
 
 def install(name, args: Namespace, vmdk: str) -> List[str]:
-  net_nat = f"--network network={environ['VIRT_NAT_NAME']},model=virtio"
-  net_macvtap = ""
-  if environ["VIRT_MACVTAP_IF"]:
-    net_macvtap = f"--network network={environ['VIRT_NAT_NAME']},model=virtio"
-  media = join(_install_dir_, args.windows_img)
-  return f"""
-    virt-install
-    --events on_crash=restart,on_reboot=restart,on_poweroff=destory
-    --boot {"cdrom,hd" if args.bios else "uefi"}
-    --virt-type kvm
-    --os-variant=win10
-    --vcpus {args.cpus},sockets=1
-    --cpu host-passthrough
-    --memory {args.memory}
-    --controller type=scsi,model=virtio-scsi
-    --disk path={vmdk},size={args.size},format=raw,sparse=true,bus=scsi,discard=unmap,io=threads,cache=none
-    {net_nat}
-    {net_macvtap}
-    --graphics vnc,listen=0.0.0.0
-    --video qxl,ram={args.vram}
-    --channel unix,target_type=virtio,name=org.qemu.guest_agent.0
-    --disk {media},device=cdrom
-    --disk {_drivers_},device=cdrom
-    --qemu-commandline="-uuid"
-    --qemu-commandline="{uuid4()}"
-    --name {name}
-    --check disk_size=off
-    {args.extra}
-    {"--print-xml --dry-run" if args.dry_run else ""}
-    """
-
-
-def post_process_xml(data: str) -> str:
-  try:
-    dom = minidom.parseString(data)
-    for disk in dom.getElementsByTagName("disk"):
-      device: str = disk.getAttribute("device")
-      if device == "cdrom":
-        for source in disk.getElementsByTagName("source"):
-          rom: str = source.getAttribute("file")
-          if rom.startswith(join("/", _install_dir_)):
-            disk.parentNode.removeChild(disk)
-    xml = dom.toxml()
-    return xml
-  except:
-    return data
+  cmds = [
+      "virt-install",
+      "--events", "on_crash=restart,on_reboot=restart,on_poweroff=destory",
+      "--virt-type", "kvm",
+      "--os-variant", args.os,
+      "--vcpus", f"{args.cpus},sockets=1",
+      "--memory", f"{args.memory}",
+      "--video", "qxl,ram={args.vram}",
+      "--graphics", "vnc,listen=0.0.0.0",
+      "--cpu", "host-passthrough",
+      "--controller", "type=scsi,model=virtio-scsi",
+      "--disk", f"path={vmdk},size={args.size},format=raw,sparse=true,bus=scsi,discard=unmap",
+      "--network", f"network={environ['VIRT_NAT_NAME']},model=virtio",
+      "--network", f"network={environ['VIRT_MACVTAP_NAME']},model=virtio",
+      "--disk", f"{_drivers_},device=cdrom",
+      "--qemu-commandline=\"-uuid\"", f"--qemu-commandline={uuid4()}",
+      "--name", name,
+      "--check", "disk_size=off",
+      "--cdrom", join(_install_dir_, args.windows_img),
+      "--boot", *(["cdrom,hd"] if args.bios else ["uefi"]),
+      args.extra.split(),
+      *(["--print-xml", "--dry-run"] if args.dry_run else []),
+  ]
+  return cmds
 
 
 def main() -> None:
@@ -109,13 +88,12 @@ def main() -> None:
       exit(1)
     else:
       cmd = install(name, args, vmdk)
-      run(cmd.split())
+      run(cmd)
       ret = run(["virsh", "dumpxml", name], stdout=PIPE)
       if ret.returncode != 0:
         bold_print("!! ERROR ^^^^")
       else:
-        data = ret.stdout.decode()
-        xml = post_process_xml(data)
+        xml = ret.stdout.decode()
         spit(vmrc, xml)
         bold_print(xml)
         bold_print(f"Dumped libvirt config -- {vmrc}")

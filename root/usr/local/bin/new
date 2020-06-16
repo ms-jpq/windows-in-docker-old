@@ -50,8 +50,8 @@ def parse() -> Namespace:
 
 def install(name, args: Namespace, vmdk: str) -> List[str]:
   cmds = [
-      "virt-install", "--print-xml",
-      "--events", "on_crash=restart,on_reboot=restart,on_poweroff=destory",
+      "virt-install",
+      "--events", "crash=restart,reboot=restart,poweroff=destory",
       "--virt-type", "kvm",
       "--os-variant", args.os,
       "--vcpus", f"{args.cpus},sockets=1",
@@ -70,7 +70,7 @@ def install(name, args: Namespace, vmdk: str) -> List[str]:
       "--cdrom", join(_install_dir_, args.windows_img),
       "--boot", *(["cdrom,hd"] if args.bios else ["uefi"]),
       *args.extra.split(),
-      *(["--dry-run"] if args.dry_run else []),
+      *(["--print-xml", "--dry-run"] if args.dry_run else []),
   ]
   return cmds
 

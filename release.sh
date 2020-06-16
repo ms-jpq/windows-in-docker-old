@@ -10,7 +10,7 @@ BUILD="msjpq/kvm-windows-build:latest"
 IMAGE="msjpq/kvm-windows:$RELEASE"
 
 
-docker build -t "$BUILD" . -f "build/Dockerfile"
+# docker build -t "$BUILD" . -f "build/Dockerfile"
 docker build -t "$IMAGE" . -f "release/$RELEASE/Dockerfile"
 
 

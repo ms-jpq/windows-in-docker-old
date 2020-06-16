@@ -62,6 +62,7 @@ def install(args: Namespace, vmdk: str) -> List[str]:
     --controller type=scsi,model=virtio-scsi
     --disk path={vmdk},size={args.size},format=raw,sparse=true,bus=scsi,discard=unmap,io=threads,cache=none
     {net_nat}
+    {net_macvtap}
     --graphics vnc,listen=0.0.0.0
     --video qxl,ram={args.vram}
     --channel unix,target_type=virtio,name=org.qemu.guest_agent.0

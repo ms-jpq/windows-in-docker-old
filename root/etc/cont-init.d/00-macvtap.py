@@ -68,23 +68,23 @@ def main() -> None:
   if not if_name:
     return
 
-  setup_link(vbr_name, if_name)
+#   setup_link(vbr_name, if_name)
 
-  out = call_into("ip", "link", "set", vbr_name, "address", new_mac())
-  print(out.decode(), end="")
+#   out = call_into("ip", "link", "set", vbr_name, "address", new_mac())
+#   print(out.decode(), end="")
 
-  out = call_into("ip", "link", "set", vbr_name, "up")
-  print(out.decode(), end="")
+#   out = call_into("ip", "link", "set", vbr_name, "up")
+#   print(out.decode(), end="")
 
-  base = join("/sys/devices/virtual/net", vbr_name)
-  re: Pattern = re_compile(r"tap\d+")
-  for name in listdir(base):
-    if re.match(name):
-      spec = join(base, name, "dev")
-      major, minor = slurp(spec).decode().split(":")
+#   base = join("/sys/devices/virtual/net", vbr_name)
+#   re: Pattern = re_compile(r"tap\d+")
+#   for name in listdir(base):
+#     if re.match(name):
+#       spec = join(base, name, "dev")
+#       major, minor = slurp(spec).decode().split(":")
 
-  out = call_into("mknod", join("/dev", vbr_name), "c", major, minor)
-  print(out.decode(), end="")
+#   out = call_into("mknod", join("/dev", vbr_name), "c", major, minor)
+#   print(out.decode(), end="")
 
   macvtap_rc = join(_vmrc_, _macvtap_rc_)
   values = {"VIRT_MACVTAP_NAME": environ["VIRT_MACVTAP_NAME"]}

@@ -15,9 +15,9 @@ DOMAIN_XML="$VMDK/$VM_NAME.xml"
 if [[ -f "$DOMAIN_XML" ]]
 then
   virsh define "$DOMAIN_XML"
+  virsh start "$VM_NAME"
   while true
   do
-    virsh start "$VM_NAME" 2>&1 > /dev/null || true
     sleep 3
   done
 else

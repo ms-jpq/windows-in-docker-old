@@ -69,7 +69,7 @@ def install(name, args: Namespace, vmdk: str) -> List[str]:
       "--check", "disk_size=off",
       "--cdrom", join(_install_dir_, args.windows_img),
       "--boot", *(["cdrom,hd"] if args.bios else ["uefi"]),
-      args.extra.split(),
+      *args.extra.split(),
       *(["--dry-run"] if args.dry_run else []),
   ]
   return cmds

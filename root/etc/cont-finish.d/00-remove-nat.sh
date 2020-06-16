@@ -4,7 +4,8 @@ set -eu
 set -o pipefail
 
 
-ip link del "$VIRT_NAT_NAME" type bridge
+ip link del "$VIRT_NAT_NAME"
+ip link del "$VIRT_NAT_NAME-nic"
 
 
 printf '%s\n' '-------------------------------'

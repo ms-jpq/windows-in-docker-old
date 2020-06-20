@@ -8,10 +8,10 @@ on:
       - "release/**"
       - "root/**"
     branches:
-      - master
+      - gates
   pull_request:
     branches:
-      - master
+      - gates
   schedule:
     - cron: "0 0 * * *" # daily
 

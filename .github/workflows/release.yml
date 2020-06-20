@@ -9,9 +9,6 @@ on:
       - "root/**"
     branches:
       - gates
-  pull_request:
-    branches:
-      - gates
   schedule:
     - cron: "0 0 * * *" # daily
 

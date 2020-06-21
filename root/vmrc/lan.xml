@@ -1,0 +1,6 @@
+<network>
+  <name>${LAN_NAME}</name>
+  <bridge name="${LAN_NAME}"/>
+  <forward mode="bridge"/>
+</network>
+

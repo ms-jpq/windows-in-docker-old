@@ -7,11 +7,11 @@ set -o pipefail
 s6-svwait /var/run/s6/services/libvirtd
 
 
-if [[ -n "$MACVTAP_IF" ]]
+if [[ -n "$LAN_IF" ]]
 then
-  virsh net-define /vmrc/macvtap.xml
-  virsh net-start "$MACVTAP_NAME"
-  virsh net-dumpxml "$MACVTAP_NAME"
+  virsh net-define /vmrc/lan.xml
+  virsh net-start "$LAN_NAME"
+  virsh net-dumpxml "$LAN_NAME"
 fi
 
 

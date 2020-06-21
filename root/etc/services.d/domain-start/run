@@ -5,7 +5,7 @@ set -o pipefail
 
 
 s6-svwait /var/run/s6/services/nat-init
-s6-svwait /var/run/s6/services/macvtap-init
+s6-svwait /var/run/s6/services/lan-init
 
 
 VMDK="/config"

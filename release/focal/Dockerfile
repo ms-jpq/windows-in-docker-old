@@ -61,8 +61,8 @@ COPY --from=build /usr/share/virtio/ /drivers/
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
     NAT_NAME=windbr0 \
-    MACVTAP_NAME=windmacvtap0 \
-    MACVTAP_IF= \
+    LAN_NAME=windmacvtap0 \
+    LAN_IF= \
     VM_NAME=wind
 VOLUME ["/config", "/install"]
 

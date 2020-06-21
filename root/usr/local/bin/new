@@ -62,7 +62,7 @@ def install(name, args: Namespace, vmdk: str) -> List[str]:
       "--controller", "type=scsi,model=virtio-scsi",
       "--disk", f"path={vmdk},size={args.size},format=raw,sparse=true,bus=scsi,discard=unmap",
       "--network", f"network={environ['NAT_NAME']},model=virtio",
-      "--network", f"network={environ['MACVTAP_NAME']},model=virtio",
+      "--network", f"network={environ['LAN_NAME']},model=virtio",
       "--disk", f"{_drivers_},device=cdrom",
       "--qemu-commandline=\"-uuid\"", f"--qemu-commandline={uuid4()}",
       "--name", name,

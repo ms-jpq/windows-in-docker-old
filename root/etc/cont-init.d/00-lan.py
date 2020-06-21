@@ -12,7 +12,7 @@ from typing import Dict, List
 
 
 _vmrc_ = "/vmrc"
-_macvtap_rc_ = "macvtap.xml"
+_lan_rc_ = "lan.xml"
 
 
 def big_print(msg: str, sep="-", file=stdout) -> None:
@@ -63,10 +63,11 @@ def new_mac() -> str:
 
 
 def main() -> None:
-  vbr_name = environ["MACVTAP_NAME"]
-  if_name = environ["MACVTAP_IF"]
+  return
+  vbr_name = environ["LAN_NAME"]
+  if_name = environ["LAN_IF"]
   if not if_name:
-    big_print("MACVTAP_IF is Nil\nSkipping Initialization")
+    big_print("LAN_IF is Nil\nSkipping Initialization")
     exit(0)
 
   i = 0
@@ -95,10 +96,10 @@ def main() -> None:
 
   call("mknod", join("/dev", vbr_name), "c", major, minor)
 
-  values = {"MACVTAP_NAME": environ["MACVTAP_NAME"],
-            "MACVTAP_IF": environ["MACVTAP_IF"]}
-  macvtap_rc = join(_vmrc_, _macvtap_rc_)
-  envsubst(values, macvtap_rc)
+  values = {"LAN_NAME": environ["LAN_NAME"],
+            "LAN_IF": environ["LAN_IF"]}
+  lan_rc = join(_vmrc_, _lan_rc_)
+  envsubst(values, lan_rc)
 
 
 main()

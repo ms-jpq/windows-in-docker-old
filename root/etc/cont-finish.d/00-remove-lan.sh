@@ -4,7 +4,7 @@ set -eu
 set -o pipefail
 
 
-if [[ -z "$MACVTAP_IF" ]]
+if [[ -z "$LAN_IF" ]]
 then
   exit
 fi

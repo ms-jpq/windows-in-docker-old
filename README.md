@@ -1,14 +1,14 @@
-# DONT FORK IT IM NOT DONE WHY YOU FORK
+# WORK IN PROGRESS
 
-# IT DOESNT WORK RIGHT NOW
+---
 
-# Windows in Docker | WIND
+# WIND - Windows in Docker
 
-Browser > VNC > Docker > KVM > Windows
+Browser > Docker > KVM > Windows
 
 ## WHY?
 
-QEMU + KVM has a bunch of moving parts, not very user friendly.
+QEMU + KVM has a relatively involved setup, not very user friendly.
 
 This image is super user friendly, it comes with:
 
@@ -16,7 +16,7 @@ This image is super user friendly, it comes with:
 
 2. Networking out of the box
 
-3. Literally single line install
+3. Literally copy paste install
 
 4. Built-in Windows drivers
 
@@ -36,16 +36,46 @@ You hardware must be able to run `KVM`. (Most computer can run at least 1 layer 
 
 ### Install
 
-Run the command below, and head to the noVNC at `-p 65080` to finish installation
+Run the command below, and head to the noVNC at port 8080 to finish installation
 
 ```sh
 docker -it --rm \
+  --privileged \
+  -v /lib/modules:/lib/modules:ro \
+  -p 8080:65080 \
   -v /vm_image_dir:/config \
   -v /iso_dir:/install \
   msjpq/kvm-windows new <windows.iso>
 ```
 
-Once you shutdown Windows. You will find the generated libvirt manifest under `/config`
+`<windows.iso>` will eject after first poweroff, you will find the generated libvirt manifest under `/config`.
+
+Run the command below to finish installation, and for future usage.
+
+```sh
+docker -it --rm \
+  --privileged \
+  -v /lib/modules:/lib/modules:ro \
+  -p 8080:65080 \
+  -v /vm_image_dir:/config \
+  msjpq/kvm-windows
+```
+
+### Drivers
+
+You will need to manually install some of drivers, (VirtIO is annoying like that).
+
+#### Essential
+
+1. The harddrive drivers will need to be installed before first reboot.
+
+2. The ethernet drivers will need to be installed after first login under Device Manager.
+
+#### Whatever
+
+Things like `qxl`, or `balloon` can also be installed under Device Manager. Not really important though.
+
+All drivers are included with the default install, under `D:/` or `E:/` drive.
 
 #### Customization
 
@@ -69,7 +99,6 @@ Additional flags to pass onto `new <image name> <flag> <flag> ...`
 - `-e PATH_PREFIX=/`
 - `-e VNC_RESIZE=scale|off`
 - `-e RECON_DELAY=250` reconnection delay (ms)
-- `-e PAGE_TITLE=KVM`
 
 #### Virtualization
 
@@ -79,7 +108,7 @@ Libvirt look for `VM_NAME.xml` to boot.
 
 ### Ports
 
-- `-p 80:65080` noVNC web UI
+- `-p 8080:65080` noVNC web UI
 
 - `-p 5900:65059` VNC
 
@@ -96,4 +125,3 @@ You need to supply your own `windows.iso`, for obvious reasons.
 ### Disclaimer
 
 Works on my machine ™.
-

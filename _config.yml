@@ -1,0 +1,10 @@
+title: KID - KDE in Docker
+
+showcase: True
+
+desc: >-
+  Windows in Docker | WIND | 🐳
+
+images:
+  - https://raw.githubusercontent.com/ms-jpq/windows-in-docker/gates/preview/scr.png
+

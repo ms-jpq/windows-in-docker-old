@@ -39,7 +39,7 @@ def parse() -> Namespace:
   parser.add_argument("-m", "--memory", type=int, default=4000)
   parser.add_argument("-s", "--size", type=int, default=100)
 
-  parser.add_argument("--vram", type=int, default=256000)
+  parser.add_argument("--vram", type=int, default=256)
   parser.add_argument("--bios", action="store_true", default=False)
 
   parser.add_argument("--os", default="win10")
@@ -56,7 +56,7 @@ def install(name, args: Namespace, vmdk: str) -> List[str]:
       "--os-variant", args.os,
       "--vcpus", f"{args.cpus},sockets=1",
       "--memory", f"{args.memory}",
-      "--video", f"qxl,ram={args.vram}",
+      "--video", f"qxl,ram={args.vram * 1000}",
       "--graphics", "vnc,listen=0.0.0.0",
       "--cpu", "host-passthrough",
       "--controller", "type=scsi,model=virtio-scsi",

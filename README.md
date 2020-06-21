@@ -32,11 +32,25 @@ You hardware must be able to run `KVM`. (Most computer can run at least 1 layer 
 Run the command below, and head to the noVNC at `-p 8080` to finish installation
 
 ```sh
-docker -it --rm msjpq/kvm-windows new <windows image name>
+docker -it --rm msjpq/kvm-windows new <windows.iso>
 ```
 
 Once you shutdown Windows. You will find the generated libvirt manifest under `/config`
 
+#### Customization
+
+Additional flags to pass onto `new <image name> <flag> <flag> ...`
+
+Flag        | Default | Option
+------------------------------
+`--bios`    | `False`  | Use `bios` instead of `uefi`
+`-os`       | `win10`  | Windows distro
+`--cpus`    | `#cores` | Number of virtual cpus
+`--memory`  | `4000`   | (MB)
+`--vram`    | `256`    | (MB)
+`--size`    | `100`    | (GB)
+`--dry-run` | `False`  | Dry run
+`--extra`   | `None`   | Extra args for [`virt-install`](https://linux.die.net/man/1/virt-install)
 
 ### Environmental Variables
 

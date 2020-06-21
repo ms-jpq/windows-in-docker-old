@@ -36,7 +36,7 @@ RUN apt update && \
 RUN groupadd --system kvm && \
     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq
-EXPOSE 5900
+EXPOSE 65900
 
 
 ## NOVNC
@@ -53,7 +53,7 @@ RUN cd /_install && \
 ENV PATH_PREFIX=/ \
     RECON_DELAY=250 \
     PAGE_TITLE=KVM
-EXPOSE 8080
+EXPOSE 68080
 
 
 ## Dependencies
@@ -61,8 +61,6 @@ COPY --from=build /usr/share/virtio/ /drivers/
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
     NAT_NAME=windbr0 \
-    LAN_NAME=windmacvtap0 \
-    LAN_IF= \
     VM_NAME=wind
 VOLUME ["/config", "/install"]
 

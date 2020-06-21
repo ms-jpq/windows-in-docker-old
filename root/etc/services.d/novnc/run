@@ -4,5 +4,5 @@ set -eu
 set -o pipefail
 
 
-exec /novnc/utils/launch.sh
+exec /novnc/utils/launch.sh --listen 66080 --vnc localhost:65900
 

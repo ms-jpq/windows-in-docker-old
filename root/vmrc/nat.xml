@@ -1,7 +1,11 @@
 <network>
   <name>${NAT_NAME}</name>
   <bridge name="${NAT_NAME}"/>
-  <forward mode="nat"/>
+  <forward mode="nat">
+    <nat>
+      <port start="1" end="60000"/>
+    </nat>
+  </forward>
   <ip address="${ROUTER}" netmask="${MASK}">
     <dhcp>
       <range start="${BEGIN}" end="${END}"/>

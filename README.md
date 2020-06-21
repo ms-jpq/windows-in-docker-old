@@ -58,14 +58,10 @@ Additional flags to pass onto `new <image name> <flag> <flag> ...`
 
 ### Environmental Variables
 
-#### VNC
-
-- `-e SCR_WIDTH=1600`
-- `-e SCR_HEIGHT=900`
-
 #### noVNC UI
 
 - `-e PATH_PREFIX=/`
+- `-e VNC_RESIZE=scale|off`
 - `-e RECON_DELAY=250` reconnection delay (ms)
 - `-e PAGE_TITLE=KVM`
 

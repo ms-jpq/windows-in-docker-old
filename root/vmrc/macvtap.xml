@@ -1,6 +1,6 @@
 <network>
-  <name>${VIRT_MACVTAP_NAME}</name>
-  <bridge name="${VIRT_MACVTAP_NAME}"/>
+  <name>${MACVTAP_NAME}</name>
+  <bridge name="${MACVTAP_NAME}"/>
   <forward mode="bridge"/>
 </network>
 

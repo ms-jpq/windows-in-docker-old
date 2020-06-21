@@ -54,8 +54,8 @@ def new_mac() -> str:
 
 
 def main() -> None:
-  vbr_name = environ["VIRT_MACVTAP_NAME"]
-  if_name = environ["VIRT_MACVTAP_IF"]
+  vbr_name = environ["MACVTAP_NAME"]
+  if_name = environ["MACVTAP_IF"]
   if not if_name:
     return
 
@@ -87,12 +87,9 @@ def main() -> None:
 
   call("ip", "link", "set", "dev", vbr_name, "up")
 
+  values = {"MACVTAP_NAME": environ["MACVTAP_NAME"],
+            "MACVTAP_IF": environ["MACVTAP_IF"]}
   macvtap_rc = join(_vmrc_, _macvtap_rc_)
-  values = {
-      "VIRT_MACVTAP_NAME":
-      environ["VIRT_MACVTAP_NAME"],
-      "VIRT_MACVTAP_IF":
-      environ["VIRT_MACVTAP_IF"]}
   envsubst(values, macvtap_rc)
 
 

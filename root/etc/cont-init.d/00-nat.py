@@ -47,7 +47,7 @@ def check_br() -> None:
   out = call_into("ip", "-j", "link", "show", "type", "bridge")
   bridges = loads(out.decode())
   br_names = (br["ifname"] for br in bridges)
-  name = environ["VIRT_NAT_NAME"]
+  name = environ["NAT_NAME"]
 
   if name in br_names:
     bold_print(f"ERROR! -- Bridge Already Exists :: {name}")
@@ -118,7 +118,7 @@ def main() -> None:
   END = str(subnet.broadcast_address - 1)
 
   nat_rc = join(_vmrc_, _nat_rc_)
-  values = {"VIRT_NAT_NAME": environ["VIRT_NAT_NAME"],
+  values = {"NAT_NAME": environ["NAT_NAME"],
             "MASK": MASK, "ROUTER": ROUTER,
             "BEGIN": BEGIN, "END": END}
   envsubst(values, nat_rc)

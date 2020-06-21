@@ -4,7 +4,7 @@ set -eu
 set -o pipefail
 
 
-if [[ -z "$VIRT_MACVTAP_IF" ]]
+if [[ -z "$MACVTAP_IF" ]]
 then
   exit
 fi

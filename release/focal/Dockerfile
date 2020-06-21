@@ -60,9 +60,9 @@ EXPOSE 8080
 COPY --from=build /usr/share/virtio/ /drivers/
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
-    VIRT_NAT_NAME=windbr0 \
-    VIRT_MACVTAP_NAME=windmacvtap0 \
-    VIRT_MACVTAP_IF= \
+    NAT_NAME=windbr0 \
+    MACVTAP_NAME=windmacvtap0 \
+    MACVTAP_IF= \
     VM_NAME=wind
 VOLUME ["/config", "/install"]
 

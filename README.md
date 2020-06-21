@@ -42,7 +42,7 @@ Once you shutdown Windows. You will find the generated libvirt manifest under `/
 Additional flags to pass onto `new <image name> <flag> <flag> ...`
 
 Flag        | Default  | Option
------------- ---------- --------
+----------- | -------- | -------
 `--bios`    | `False`  | Use `bios` instead of `uefi`
 `-os`       | `win10`  | Windows distro
 `--cpus`    | `#cores` | Number of virtual cpus

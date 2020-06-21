@@ -22,6 +22,12 @@ This image is super user friendly, it comes with:
 
 5. Crazy easy customizations, ie. `--cpus=9 --memory=6024 --size=120`
 
+## Preview
+
+![preview1 img](https://raw.githubusercontent.com/ms-jpq/windows-in-docker/gates/preview/scr.png)
+
+![preview2 img](https://raw.githubusercontent.com/ms-jpq/windows-in-docker/gates/preview/drivers.png)
+
 ## Instructions
 
 ### Prerequisites

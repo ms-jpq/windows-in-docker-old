@@ -14,6 +14,6 @@ TEMP="$(envsubst '${PATH_PREFIX},${SOCKET_PREFIX}' < /etc/nginx/nginx.conf)"
 printf '%s' "$TEMP" > /etc/nginx/nginx.conf
 
 export PAGE_PREFIX="${SOCKET_PREFIX:1}/"
-TEMP="$(envsubst '${PAGE_PREFIX},${PAGE_TITLE},${RECON_DELAY}' < /novnc/index.html)"
+TEMP="$(envsubst '${PAGE_PREFIX},${PAGE_TITLE},${VNC_RESIZE},${RECON_DELAY}' < /novnc/index.html)"
 printf '%s' "$TEMP" > /novnc/index.html
 

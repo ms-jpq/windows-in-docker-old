@@ -36,7 +36,7 @@ RUN apt update && \
 RUN groupadd --system kvm && \
     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq
-EXPOSE 65900
+EXPOSE 65059
 
 
 ## NOVNC
@@ -53,7 +53,7 @@ RUN cd /_install && \
 ENV PATH_PREFIX=/ \
     RECON_DELAY=250 \
     PAGE_TITLE=KVM
-EXPOSE 68080
+EXPOSE 65080
 
 
 ## Dependencies

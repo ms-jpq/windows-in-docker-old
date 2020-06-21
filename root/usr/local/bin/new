@@ -57,7 +57,7 @@ def install(name, args: Namespace, vmdk: str) -> List[str]:
       "--vcpus", f"{args.cpus},sockets=1",
       "--memory", f"{args.memory}",
       "--video", f"qxl,ram={args.vram * 1000}",
-      "--graphics", "vnc,listen=0.0.0.0,port=65900",
+      "--graphics", "vnc,listen=0.0.0.0,port=65059",
       "--cpu", "host-passthrough",
       "--controller", "type=scsi,model=virtio-scsi",
       "--disk", f"path={vmdk},size={args.size},format=raw,sparse=true,bus=scsi,discard=unmap",

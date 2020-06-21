@@ -11,6 +11,6 @@ fi
 
 
 printf '%s\n' '-------------------------------'
-printf '%s\n' 'DEINIT -- MACVTAP'
+printf '%s\n' 'DEINIT -- LAN'
 printf '%s\n' '-------------------------------'
 

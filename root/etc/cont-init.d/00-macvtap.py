@@ -4,13 +4,22 @@ from os import environ, listdir
 from os.path import join
 from random import randint
 from re import Pattern, compile as re_compile
+from shutil import get_terminal_size
 from subprocess import PIPE, run
+from sys import stderr, stdout
 from time import sleep
 from typing import Dict, List
 
 
 _vmrc_ = "/vmrc"
 _macvtap_rc_ = "macvtap.xml"
+
+
+def big_print(msg: str, sep="-", file=stdout) -> None:
+  _, cols = get_terminal_size()
+  print(sep * cols, file=file)
+  print(msg, file=file)
+  print(sep * cols, file=file)
 
 
 def call(prog: str, *args: List[str]) -> None:
@@ -57,7 +66,8 @@ def main() -> None:
   vbr_name = environ["MACVTAP_NAME"]
   if_name = environ["MACVTAP_IF"]
   if not if_name:
-    exit(1)
+    big_print("MACVTAP_IF is Nil\nSkipping Initialization")
+    exit(0)
 
   i = 0
   while True:
@@ -84,8 +94,6 @@ def main() -> None:
       major, minor = slurp(spec).decode().split(":")
 
   call("mknod", join("/dev", vbr_name), "c", major, minor)
-
-  call("ip", "link", "set", "dev", vbr_name, "up")
 
   values = {"MACVTAP_NAME": environ["MACVTAP_NAME"],
             "MACVTAP_IF": environ["MACVTAP_IF"]}

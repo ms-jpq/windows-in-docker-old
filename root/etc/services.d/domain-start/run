@@ -13,6 +13,10 @@ DOMAIN_XML="$VMDK/$VM_NAME.xml"
 
 if [[ -f "$DOMAIN_XML" ]]
 then
+  printf '%s\n' '--------------------------------------------------------'
+  cat "$DOMAIN_XML"
+  printf '%s\n' '--------------------------------------------------------'
+
   virsh define "$DOMAIN_XML"
   virsh start "$VM_NAME"
   while true

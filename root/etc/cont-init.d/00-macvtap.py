@@ -87,6 +87,9 @@ def main() -> None:
   out = call_into("mknod", join("/dev", vbr_name), "c", major, minor)
   print(out.decode(), end="")
 
+  out = call_into("ip", "link", "set", "dev", vbr_name, "up")
+  print(out.decode(), end="")
+
   macvtap_rc = join(_vmrc_, _macvtap_rc_)
   values = {
       "VIRT_MACVTAP_NAME":

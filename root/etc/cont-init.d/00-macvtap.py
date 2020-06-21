@@ -51,8 +51,9 @@ def new_mac() -> str:
 def setup_link(name: str, lf_name: str) -> None:
   i = 0
   while True:
-    ret = run(["ip", "link", "add", "link", lf_name, "name",
-               name, "type", "macvtap", "mode", "bridge"])
+    ret = run(["ip", "link", "add",
+               "link", lf_name, "name", name,
+               "type", "macvtap", "mode", "bridge"])
     if ret.returncode == 0:
       return
     elif i == 5:

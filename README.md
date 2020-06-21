@@ -32,9 +32,6 @@ You hardware must be able to run `KVM`. (Most computer can run at least 1 layer 
 
 Run the command below, and head to the noVNC at `-p 8080` to finish installation
 
-Mount `-v /install` with <windows iso>
-
-
 ```sh
 docker -it --rm \
   -v /vm_image_dir:/config \

@@ -6,7 +6,7 @@ from os import chdir, environ, popen
 from os.path import isfile, join
 from shutil import get_terminal_size
 from subprocess import PIPE, run
-from sys import stderr
+from sys import stderr, stdout
 from typing import List, Tuple
 from uuid import uuid4
 from xml.dom import minidom
@@ -17,11 +17,11 @@ _drivers_ = join("drivers", "virtio-win.iso")
 _vmdk_dir_ = "config"
 
 
-def bold_print(message: str, sep="-") -> None:
+def bold_print(message: str, sep="-", file=stdout) -> None:
   _, cols = get_terminal_size()
-  print(sep * cols, file=stderr)
-  print(message)
-  print(sep * cols, file=stderr)
+  print(sep * cols, file=file)
+  print(message, file=file)
+  print(sep * cols, file=file)
 
 
 def spit(path: str, text: str) -> None:
@@ -93,7 +93,7 @@ def main() -> None:
       if not args.dry_run:
         ret = run(["virsh", "dumpxml", name], stdout=PIPE)
         if ret.returncode != 0:
-          bold_print("!! ERROR ^^^^")
+          bold_print("!! ERROR ^^^^", file=stderr)
         else:
           xml = ret.stdout.decode()
           spit(vmrc, xml)

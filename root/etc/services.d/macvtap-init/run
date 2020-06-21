@@ -9,9 +9,12 @@ s6-svwait /var/run/s6/services/libvirtd
 
 if [[ -n "$MACVTAP_IF" ]]
 then
-  virsh net-define /vmrc/macvtap.xml
-  virsh net-start "$MACVTAP_NAME"
-  virsh net-dumpxml "$MACVTAP_NAME"
+  # virsh iface-bridge "$MACVTAP_IF" "$MACVTAP_NAME"
+  echo 555
+
+  # virsh net-define /vmrc/macvtap.xml
+  # virsh net-start "$MACVTAP_NAME"
+  # virsh net-dumpxml "$MACVTAP_NAME"
 fi
 
 

@@ -1,5 +1,6 @@
 FROM msjpq/kvm-windows-build:latest AS build
-FROM ubuntu:focal
+FROM fedora:latest
+
 
 ARG S6_VER="2.0.0.1"
 ARG NO_VNC_VER="1.1.0"
@@ -17,25 +18,19 @@ ENTRYPOINT ["/init"]
 
 
 ## KVM-QEMU
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y \
+RUN dnf install -y \
     qemu-kvm \
-    ovmf \
-    libvirt-daemon \
-    libvirt-clients \
-    virt-top \
-    virtinst \
+    libvirt \
+    virt-install \
     iptables \
     ebtables \
     dnsmasq \
     dmidecode \
-    iproute2 \
+    network-scripts \
     bridge-utils
-RUN groupadd --system kvm && \
-    useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
-    useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq
+# RUN groupadd --system kvm && \
+#     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt         libvirt-qemu && \
+#     useradd -U -s /usr/sbin/nologin -d /var/lib/libvirt/dnsmasq libvirt-dnsmasq
 EXPOSE 5900
 
 
@@ -43,7 +38,7 @@ EXPOSE 5900
 ADD https://github.com/novnc/noVNC/archive/v${NO_VNC_VER}.zip /_install
 ADD https://github.com/novnc/websockify/archive/v${WEB_SOCK_VER}.zip /_install
 RUN cd /_install && \
-    apt install -y unzip nginx gettext-base python3 python3-pip && \
+    dnf install -y unzip nginx gettext python3 python3-pip && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     pip3 install numpy && \
     unzip v${NO_VNC_VER}.zip && \
@@ -60,6 +55,7 @@ EXPOSE 8080
 COPY --from=build /usr/share/virtio/ /drivers/
 COPY root /
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
+    S6_CMD_WAIT_FOR_SERVICES_MAXTIME=60000 \
     NAT_NAME=windbr0 \
     MACVTAP_NAME=windmacvtap0 \
     MACVTAP_IF= \
@@ -68,7 +64,5 @@ VOLUME ["/config", "/install"]
 
 
 ## Cleanup
-RUN apt autoremove -y && \
-    apt clean && \
-    rm -r /_install
+# RUN rm -r /_install
 

@@ -63,6 +63,7 @@ def new_mac() -> str:
 
 
 def main() -> None:
+  return
   vbr_name = environ["MACVTAP_NAME"]
   if_name = environ["MACVTAP_IF"]
   if not if_name:

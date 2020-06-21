@@ -6,5 +6,7 @@ set -o pipefail
 
 mkdir -p /run/dbus/
 
-exec /usr/bin/dbus-daemon --system --nofork --nopidfile
+# exec /usr/bin/dbus-broker-launch --scope system --audit
+
+sleep infinity
 

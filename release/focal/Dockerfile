@@ -52,8 +52,7 @@ RUN cd /_install && \
     mv websockify-${WEB_SOCK_VER} /novnc/utils/websockify
 ENV PATH_PREFIX=/ \
     VNC_RESIZE=scale \
-    RECON_DELAY=250 \
-    PAGE_TITLE=KVM
+    RECON_DELAY=250
 EXPOSE 65080
 
 

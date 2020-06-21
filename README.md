@@ -75,7 +75,7 @@ You will need to manually install some of drivers, (VirtIO is annoying like that
 
 Things like `qxl`, or `balloon` can also be installed under Device Manager. Not really important though.
 
-All drivers are included with the default install, under `D:/` or `E:/` drive.
+**All drivers are included with the default install, under `D:/` or `E:/` drive.**
 
 #### Customization
 

@@ -1,4 +1,5 @@
 # DONT FORK IT IM NOT DONE WHY YOU FORK
+
 # IT DOESNT WORK RIGHT NOW
 
 # Windows in Docker | WIND
@@ -11,15 +12,15 @@ QEMU + KVM has a bunch of moving parts, not very user friendly.
 
 This image is super user friendly, it comes with:
 
-1) Browser UI
+1. Browser UI
 
-2) NAT + Lan networking out of the box
+2. NAT + Lan networking out of the box
 
-3) Literally single line install
+3. Literally single line install
 
-4) Built-in Windows drivers
+4. Built-in Windows drivers
 
-5) Crazy easy customizations, ie. `--cpus=9 --memory=6024 --size=120`
+5. Crazy easy customizations, ie. `--cpus=9 --memory=6024 --size=120`
 
 ## Instructions
 
@@ -41,16 +42,16 @@ Once you shutdown Windows. You will find the generated libvirt manifest under `/
 
 Additional flags to pass onto `new <image name> <flag> <flag> ...`
 
-Flag        | Default  | Option
------------ | -------- | -------
-`--bios`    | `False`  | Use `bios` instead of `uefi`
-`-os`       | `win10`  | Windows distro
-`--cpus`    | `#cores` | Number of virtual cpus
-`--memory`  | `4000`   | (MB)
-`--vram`    | `256`    | (MB)
-`--size`    | `100`    | (GB)
-`--dry-run` | `False`  | Dry run
-`--extra`   | `None`   | Extra args for [`virt-install`](https://linux.die.net/man/1/virt-install)
+| Flag        | Default  | Option                                                                    |
+| ----------- | -------- | ------------------------------------------------------------------------- |
+| `--bios`    | `False`  | Use `bios` instead of `uefi`                                              |
+| `-os`       | `win10`  | Windows distro                                                            |
+| `--cpus`    | `#cores` | Number of virtual cpus                                                    |
+| `--memory`  | `4000`   | (MB)                                                                      |
+| `--vram`    | `256`    | (MB)                                                                      |
+| `--size`    | `100`    | (GB)                                                                      |
+| `--dry-run` | `False`  | Dry run                                                                   |
+| `--extra`   | `None`   | Extra args for [`virt-install`](https://linux.die.net/man/1/virt-install) |
 
 ### Environmental Variables
 

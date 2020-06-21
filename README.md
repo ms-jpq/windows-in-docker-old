@@ -29,7 +29,14 @@ You hardware must be able to run `KVM`. (Most computer can run at least 1 layer 
 
 ### Install
 
-Run
+Run the command below, and head to the noVNC at `-p 8080` to finish installation
+
+```sh
+docker -it --rm msjpq/kvm-windows new <windows image name>
+```
+
+Once you shutdown Windows. You will find the generated libvirt manifest under `/config`
+
 
 ### Environmental Variables
 
@@ -58,9 +65,15 @@ Libvirt look for `VM_NAME.xml` to boot.
 
 ### Volumes
 
+Libvirt manifests are stored in`/config`, along with VM images.
+
 - `-v ./vm_data:/config`
 
+You need to supply your own `windows.iso`, for obvious reasons.
+
 - `-v ./install_media:/install`
+
+### Disclaimer
 
 Works on my machine ™.
 

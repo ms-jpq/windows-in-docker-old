@@ -84,7 +84,8 @@ def main() -> None:
     vmdk = join(_vmdk_dir_, f"{name}.img")
     vmrc = join(_vmdk_dir_, f"{name}.xml")
     if isfile(vmdk) or isfile(vmrc):
-      print(f"ERROR :: {name} already exists!", file=stderr)
+      bold_print(
+          f"ERROR :: {name}.img | {name}.xml already exists!", file=stderr)
       exit(1)
     else:
       cmd = install(name, args, vmdk)

@@ -2,7 +2,7 @@
 
 ---
 
-# [Windows in Docker | WIND](https://ms-jpq.github.io/windows-in-docker)
+# [WIND - Windows in Docker](https://ms-jpq.github.io/windows-in-docker)
 
 Browser > Docker > KVM > Windows
 
@@ -125,3 +125,4 @@ You need to supply your own `windows.iso`, for obvious reasons.
 ### Disclaimer
 
 Works on my machine ™.
+

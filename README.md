@@ -41,7 +41,6 @@ Run
 #### noVNC UI
 
 - `-e PATH_PREFIX=/`
-- `-e VNC_RESIZE=scale|remote|off` remote = rescale remote desktop, scale = stretch remote desktop
 - `-e RECON_DELAY=250` reconnection delay (ms)
 - `-e PAGE_TITLE=KVM`
 

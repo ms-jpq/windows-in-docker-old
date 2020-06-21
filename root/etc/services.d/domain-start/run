@@ -20,9 +20,11 @@ then
     sleep 3
   done
 else
+  >&2 printf '%s\n' '--------------------------------------------------------'
   >&2 printf '%s\n' 'WARNING -- VM Not Found'
   >&2 printf '%s\n' 'Build VM using -- CMD new'
   >&2 printf '%s\n' 'See https://github.com/ms-jpq/windows-in-docker'
+  >&2 printf '%s\n' '--------------------------------------------------------'
   sleep infinity
 fi
 

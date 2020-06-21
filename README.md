@@ -32,8 +32,14 @@ You hardware must be able to run `KVM`. (Most computer can run at least 1 layer 
 
 Run the command below, and head to the noVNC at `-p 8080` to finish installation
 
+Mount `-v /install` with <windows iso>
+
+
 ```sh
-docker -it --rm msjpq/kvm-windows new <windows.iso>
+docker -it --rm \
+  -v /vm_image_dir:/config \
+  -v /iso_dir:/install \
+  msjpq/kvm-windows new <windows.iso>
 ```
 
 Once you shutdown Windows. You will find the generated libvirt manifest under `/config`

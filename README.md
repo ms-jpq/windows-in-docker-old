@@ -30,7 +30,7 @@ You hardware must be able to run `KVM`. (Most computer can run at least 1 layer 
 
 ### Install
 
-Run the command below, and head to the noVNC at `-p 68080` to finish installation
+Run the command below, and head to the noVNC at `-p 65080` to finish installation
 
 ```sh
 docker -it --rm \
@@ -77,9 +77,9 @@ Libvirt look for `VM_NAME.xml` to boot.
 
 ### Ports
 
-- `-p 80:68080` noVNC web UI
+- `-p 80:65080` noVNC web UI
 
-- `-p 5900:65900` VNC
+- `-p 5900:65059` VNC
 
 ### Volumes
 

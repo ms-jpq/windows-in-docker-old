@@ -57,7 +57,7 @@ def main() -> None:
   vbr_name = environ["MACVTAP_NAME"]
   if_name = environ["MACVTAP_IF"]
   if not if_name:
-    return
+    exit(1)
 
   i = 0
   while True:
@@ -65,7 +65,7 @@ def main() -> None:
                "link", if_name, "name", vbr_name,
                "type", "macvtap", "mode", "bridge"])
     if ret.returncode == 0:
-      return
+      break
     elif i == 5:
       exit(1)
     else:

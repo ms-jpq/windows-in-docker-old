@@ -11,6 +11,25 @@ VMDK="/config"
 DOMAIN_XML="$VMDK/$VM_NAME.xml"
 
 
+check_running() {
+  local running=($(virsh list --name --state-running))
+  local found=0
+  for vm in "${runing[@]}"
+  do
+    printf '%s\n' "$vm"
+    if [[ "$vm" == "$VM_NAME" ]]
+    then
+      found=1
+    fi
+    if [[ "$found" -ne 0 ]]
+    then
+      printf '%s\n' "RUNNING"
+    fi
+    printf '%s\n' "$found"
+  done
+}
+
+
 if [[ -f "$DOMAIN_XML" ]]
 then
   printf '%s\n' '--------------------------------------------------------'
@@ -19,9 +38,11 @@ then
 
   virsh define "$DOMAIN_XML"
   virsh start "$VM_NAME"
+
   while true
   do
     sleep 3
+    check_running
   done
 else
   >&2 printf '%s\n' '--------------------------------------------------------'

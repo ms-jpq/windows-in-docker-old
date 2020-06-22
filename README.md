@@ -122,11 +122,11 @@ Libvirt look for `VM_NAME.xml` to boot.
 
 Libvirt manifests are stored in`/config`, along with VM images.
 
-- `-v ./vm_data:/config`
+- `-v ./vm_data/:/config`
 
 You need to supply your own `windows.iso`, for obvious reasons.
 
-- `-v ./install_media:/install`
+- `-v ./install_media/:/install`
 
 ### Disclaimer
 

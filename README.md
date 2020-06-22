@@ -36,7 +36,7 @@ You hardware must be able to run `KVM`. (Most computer can run at least 1 layer 
 
 ### Install
 
-Run the command below, and head to the noVNC at port 8080 to finish installation
+Run the command below, and head to Firefox at port 8080 to finish installation
 
 ```sh
 docker -it --rm \
@@ -47,6 +47,8 @@ docker -it --rm \
   -v /iso_dir:/install \
   msjpq/kvm-windows new <windows.iso>
 ```
+
+**Add `--bios`, if your windows version is old**
 
 `<windows.iso>` will eject after first poweroff, you will find the generated libvirt manifest under `/config`.
 
@@ -83,7 +85,7 @@ Additional flags to pass onto `new <image name> <flag> <flag> ...`
 
 | Flag        | Default  | Option                                                                    |
 | ----------- | -------- | ------------------------------------------------------------------------- |
-| `--bios`    | `False`  | Use `bios` instead of `uefi`                                              |
+| `--bios`    | `False`  | Boot `bios` instead of `uefi`                                             |
 | `-os`       | `win10`  | Windows distro                                                            |
 | `--cpus`    | `#cores` | Number of virtual cpus                                                    |
 | `--memory`  | `4000`   | (MB)                                                                      |
@@ -94,7 +96,7 @@ Additional flags to pass onto `new <image name> <flag> <flag> ...`
 
 ### Environmental Variables
 
-#### noVNC UI
+#### Browser UI
 
 - `-e PATH_PREFIX=/`
 - `-e VNC_RESIZE=scale|off`
@@ -103,6 +105,8 @@ Additional flags to pass onto `new <image name> <flag> <flag> ...`
 #### Virtualization
 
 Libvirt look for `VM_NAME.xml` to boot.
+
+`new` will create `VM_NAME.xml` and `VM_NAME.img`.
 
 - `-e VM_NAME=wind`
 

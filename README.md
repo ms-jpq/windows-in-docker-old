@@ -6,11 +6,13 @@
 
 Browser > Docker > KVM > Windows
 
+Thank you Redhat, very legal & very cool.
+
 ## WHY?
 
 QEMU + KVM has a relatively involved setup, not very user friendly.
 
-This image is super user friendly, it comes with:
+This image is vastly more user friendly, it comes with:
 
 1. Browser UI
 

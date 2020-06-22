@@ -12,27 +12,31 @@ DOMAIN_XML="$VMDK/$VM_NAME.xml"
 
 
 check_running() {
-  local running="$(virsh list --name --state-running | tr -d '\n' | wc -l)"
-  if [[ "$running" -eq 0 ]]
-  then
-    exit
-  fi
+  local running=($(virsh list --name --state-running))
+  for vm in "${running[@]}"
+  do
+    if [[ "$vm" == "$VM_NAME" ]]
+    then
+      return
+    fi
+  done
+  exit
 }
 
 
 if [[ -f "$DOMAIN_XML" ]]
 then
-  printf '%s\n' '--------------------------------------------------------'
+  printf '\n%s\n' '--------------------------------------------------------'
   cat "$DOMAIN_XML"
-  printf '%s\n' '--------------------------------------------------------'
+  printf '\n%s\n' '--------------------------------------------------------'
 
   virsh define "$DOMAIN_XML"
   virsh start "$VM_NAME"
 
   while true
   do
-    sleep 3
     check_running
+    sleep 1
   done
 else
   >&2 printf '%s\n' '--------------------------------------------------------'

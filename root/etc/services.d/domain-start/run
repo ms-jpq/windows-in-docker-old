@@ -16,16 +16,14 @@ check_running() {
   local found=0
   for vm in "${runing[@]}"
   do
-    printf '%s\n' "$vm"
     if [[ "$vm" == "$VM_NAME" ]]
     then
       found=1
     fi
-    if [[ "$found" -ne 0 ]]
+    if [[ "$found" -eq 0 ]]
     then
-      printf '%s\n' "RUNNING"
+      exit
     fi
-    printf '%s\n' "$found"
   done
 }
 

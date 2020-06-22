@@ -4,5 +4,5 @@ set -eu
 set -o pipefail
 
 
-printf '%s\n' "DONE"
+s6-svscanctl -t /var/run/s6/services
 

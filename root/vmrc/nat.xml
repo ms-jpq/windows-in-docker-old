@@ -5,6 +5,7 @@
   <ip address="${ROUTER}" netmask="${MASK}">
     <dhcp>
       <range start="${BEGIN}" end="${END}"/>
+      <host mac="${VM_MAC}" name="${VM_NAME}" ip="${VM_IP}"/>
     </dhcp>
   </ip>
 </network>

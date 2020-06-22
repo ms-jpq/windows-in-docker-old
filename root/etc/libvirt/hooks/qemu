@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 from argparse import ArgumentParser, Namespace
+from ipaddress import IPv4Address, ip_address
+from os import environ
 from subprocess import PIPE, run
-from sys import argv, stdin
+from sys import argv
 from typing import List
 
 
@@ -14,11 +16,6 @@ def call_into(prog: str, *args: List[str]) -> bytes:
     return ret.stdout
 
 
-def spit(text: str, path: str) -> None:
-  with open(path, "w") as fd:
-    path.write(text)
-
-
 def parse_args() -> Namespace:
   parser = ArgumentParser()
   parser.add_argument("domain")
@@ -27,11 +24,28 @@ def parse_args() -> Namespace:
   return parser.parse_args()
 
 
+def ip_table(ip: IPv4Address, port: int) -> None:
+  ["iptables",
+   "--table", "filter",
+   "--append", "FORWARD",
+   "--protocol", "all",
+   "--jump", "ACCEPT",
+   "--destination", str(ip),
+   "--destination-port", str(port)]
+
+  ["iptables",
+   "--table", "nat",
+   "--append", "PREROUTING",
+   "--protocol", "all",
+   "--jump", "DNAT",
+   "--to-destination", f"{ip}:{port}",
+   "--destination-port", str(port)]
+
+
 def main() -> None:
   args = parse_args()
-  data: str = stdin.read()
-  spit(str(args), "/vmrc/args")
-  spit(data, "/vmrc/stdin")
+  if args.state != "start":
+    return
 
 
 main()

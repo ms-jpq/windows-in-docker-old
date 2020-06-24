@@ -26,6 +26,12 @@ def bold_print(message: str, sep="-", file=stdout) -> None:
   print(sep * cols, file=file)
 
 
+def call(prog: str, *args: List[str]) -> bytes:
+  ret = run([prog, *args])
+  if ret.returncode != 0:
+    exit(ret.returncode)
+
+
 def call_into(prog: str,
               *args: List[str],
               input: bytes = None,
@@ -152,11 +158,11 @@ def main() -> None:
             "VM_NAME": VM_NAME}
   envsubst(values, _nat_rc_)
   spit(_ip_rc_, VM_IP.encode())
-  out = call_into("route-nat",
-                  "--bridge", NAT_NAME,
-                  "--ip", VM_IP,
-                  "--state", "on")
-  print(out.decode())
+
+  call("route-nat",
+       "--bridge", NAT_NAME,
+       "--ip", VM_IP,
+       "--state", "on")
 
 
 main()

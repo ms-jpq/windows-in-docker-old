@@ -14,7 +14,6 @@ class State(Enum):
 
 
 def call(prog: str, *args: List[str]) -> bytes:
-  print(*args)
   ret = run([prog, *args])
   if ret.returncode != 0:
     exit(ret.returncode)

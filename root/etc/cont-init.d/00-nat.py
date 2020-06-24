@@ -127,8 +127,6 @@ def p_mac_addr(name: str) -> str:
         return mac.getAttribute("address")
     raise ValueError(f"Unable to parse XML -- Missing Mac Address\n{xml}")
   except OSError:
-    pass
-  else:
     return rand_mac()
 
 

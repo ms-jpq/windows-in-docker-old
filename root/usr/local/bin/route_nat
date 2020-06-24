@@ -4,7 +4,6 @@ from argparse import ArgumentParser, Namespace
 from ipaddress import IPv4Address, ip_address
 from os import environ
 from subprocess import PIPE, run
-from sys import argv
 from typing import List
 
 

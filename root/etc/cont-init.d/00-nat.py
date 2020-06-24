@@ -125,8 +125,8 @@ def p_mac_addr(name: str) -> str:
         source = interface.getElementsByTagName("source")[0]
         mac = interface.getElementsByTagName("mac")[0]
         return mac.getAttribute("address")
-    return rand_mac()
-  except:
+    raise ValueError(f"Unable to parse XML -- Missing Mac Address\n{xml}")
+  except OSError:
     pass
   else:
     return rand_mac()

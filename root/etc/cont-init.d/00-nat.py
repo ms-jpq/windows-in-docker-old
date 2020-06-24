@@ -4,6 +4,7 @@ from ipaddress import IPv4Address, IPv4Network, ip_address, ip_network
 from json import loads
 from os import environ
 from os.path import join
+from random import randint
 from shutil import get_terminal_size
 from socket import AddressFamily
 from subprocess import PIPE, run
@@ -12,7 +13,8 @@ from typing import Any, Dict, List, Iterable, Iterator, Optional
 
 
 _vmrc_ = "/vmrc"
-_nat_rc_ = "nat.xml"
+_nat_rc_ = join(_vmrc_, "nat.xml")
+_ip_rc_ = join(_vmrc_, "ip_addr")
 
 
 def bold_print(message: str, sep="-", file=stdout) -> None:
@@ -41,6 +43,14 @@ def slurp(path: str) -> bytes:
 def spit(path: str, data: bytes) -> None:
   with open(path, "wb") as fd:
     fd.write(data)
+
+
+def envsubst(values: Dict[str, str], path: str) -> None:
+  template = slurp(path)
+  subst = ",".join("${" + key + "}" for key in values.keys())
+  env = {**environ, **values}
+  out = call_into("envsubst", subst, env=env, input=template)
+  spit(path, out)
 
 
 def check_br() -> None:
@@ -98,12 +108,14 @@ def p_non_overlapping(networks: List[IPv4Network]) -> Iterable[IPv4Network]:
       yield exclusion
 
 
-def envsubst(values: Dict[str, str], path: str) -> None:
-  template = slurp(path)
-  subst = ",".join("${" + key + "}" for key in values.keys())
-  env = {**environ, **values}
-  out = call_into("envsubst", subst, env=env, input=template)
-  spit(path, out)
+def rand_mac() -> str:
+  def mac_slot(): return format(randint(0, 255), 'x')
+  mac = f"52:54:00:{mac_slot()}:{mac_slot()}:{mac_slot()}"
+  return mac
+
+
+def p_mac_addr(name: str) -> str:
+  return rand_mac()
 
 
 def main() -> None:
@@ -111,17 +123,28 @@ def main() -> None:
   networks: List[IPv4Network] = [*p_networks()]
   subnet: IPv4Network = next(p_non_overlapping(networks))
 
+  VM_NAME = environ["VM_NAME"]
+  NAT_NAME = environ["NAT_NAME"]
   it: Iterator[IPv4Network] = subnet.hosts()
   MASK = str(subnet.netmask)
   ROUTER = str(next(it))
   BEGIN = str(next(it))
+  VM_IP = str(next(it))
   END = str(subnet.broadcast_address - 1)
+  VM_MAC = p_mac_addr(VM_NAME)
 
-  nat_rc = join(_vmrc_, _nat_rc_)
-  values = {"NAT_NAME": environ["NAT_NAME"],
+  values = {"NAT_NAME": NAT_NAME,
             "MASK": MASK, "ROUTER": ROUTER,
-            "BEGIN": BEGIN, "END": END}
-  envsubst(values, nat_rc)
+            "BEGIN": BEGIN, "END": END,
+            "VM_MAC": VM_MAC, "VM_IP": VM_IP,
+            "VM_NAME": VM_NAME}
+  envsubst(values, _nat_rc_)
+  spit(_ip_rc_, VM_IP.encode())
+  out = call_into("route-nat",
+                  "--bridge", NAT_NAME,
+                  "--ip", VM_IP,
+                  "--state", "on")
+  print(out.decode())
 
 
 main()

@@ -1,25 +1,30 @@
 #!/usr/bin/env python3
 
+from enum import Enum
 from argparse import ArgumentParser, Namespace
 from ipaddress import IPv4Address, ip_address
 from os import environ
-from subprocess import PIPE, run
+from subprocess import run
 from typing import List
 
 
-def call_into(prog: str, *args: List[str]) -> bytes:
-  ret = run([prog, *args], stdout=PIPE)
+class State(Enum):
+  on = "on"
+  off = "off"
+
+
+def call(prog: str, *args: List[str]) -> bytes:
+  ret = run([prog, *args])
   if ret.returncode != 0:
     exit(ret.returncode)
-  else:
-    return ret.stdout
 
 
 def parse_args() -> Namespace:
   parser = ArgumentParser()
-  parser.add_argument("domain")
-  parser.add_argument("state")
-  parser.add_argument("extra", nargs="*")
+  parser.add_argument("--bridge", required=True)
+  parser.add_argument("--ip", required=True, type=ip_address)
+  parser.add_argument("--state", required=True,
+                      choices=(State.on, State.off), type=State)
   return parser.parse_args()
 
 
@@ -43,8 +48,7 @@ def ip_table(ip: IPv4Address, port: int) -> None:
 
 def main() -> None:
   args = parse_args()
-  if args.state != "start":
-    return
+  print(args)
 
 
 main()

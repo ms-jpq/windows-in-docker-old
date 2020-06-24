@@ -10,8 +10,10 @@ from socket import AddressFamily
 from subprocess import PIPE, run
 from sys import stderr, stdout
 from typing import Any, Dict, List, Iterable, Iterator, Optional
+from xml.dom import minidom
 
 
+_vmdk_ = "/config"
 _vmrc_ = "/vmrc"
 _nat_rc_ = join(_vmrc_, "nat.xml")
 _ip_rc_ = join(_vmrc_, "ip_addr")
@@ -115,7 +117,19 @@ def rand_mac() -> str:
 
 
 def p_mac_addr(name: str) -> str:
-  return rand_mac()
+  try:
+    xml = slurp(join(_vmdk_, f"{name}.xml"))
+    dom = minidom.parseString(xml)
+    for interface in dom.getElementsByTagName("interface"):
+      if interface.getAttribute("type") == "network":
+        source = interface.getElementsByTagName("source")[0]
+        mac = interface.getElementsByTagName("mac")[0]
+        return mac.getAttribute("address")
+    return rand_mac()
+  except:
+    pass
+  else:
+    return rand_mac()
 
 
 def main() -> None:

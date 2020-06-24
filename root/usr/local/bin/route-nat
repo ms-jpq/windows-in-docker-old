@@ -28,27 +28,39 @@ def parse_args() -> Namespace:
   return parser.parse_args()
 
 
-def ip_table(ip: IPv4Address, port: int) -> None:
-  ["iptables",
-   "--table", "filter",
-   "--append", "FORWARD",
-   "--protocol", "all",
-   "--jump", "ACCEPT",
-   "--destination", str(ip),
-   "--destination-port", str(port)]
+def ip_table(bridge: str, ip: IPv4Address, port: int, state: State) -> None:
+  action = "--append" if state == State.on else "--delete"
 
-  ["iptables",
-   "--table", "nat",
-   "--append", "PREROUTING",
-   "--protocol", "all",
-   "--jump", "DNAT",
-   "--to-destination", f"{ip}:{port}",
-   "--destination-port", str(port)]
+  chain1 = ("iptables",
+            "--table", "filter",
+            action, "FORWARD",
+            "--protocol", "all",
+            "--jump", "ACCEPT",
+            "--out-interface", bridge,
+            "--destination", str(ip),
+            "--destination-port", str(port))
+
+  chain2 = ("iptables",
+            "--table", "nat",
+            action, "PREROUTING",
+            "--protocol", "all",
+            "--jump", "DNAT",
+            "--out-interface", bridge,
+            "--to-destination", f"{ip}:{port}",
+            "--destination-port", str(port))
+
+  call(*chain1)
+  call(*chain2)
 
 
 def main() -> None:
   args = parse_args()
-  print(args)
+  for i in range(1, 65001):
+    ip_table(
+        port=i,
+        bridge=args.bridge,
+        ip=args.ip,
+        state=args.state)
 
 
 main()

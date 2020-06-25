@@ -61,23 +61,23 @@ docker -it --rm \
   msjpq/kvm-windows
 ```
 
-### Drivers
+#### Drivers
 
 You will need to manually install some of drivers, (VirtIO is annoying like that).
 
-#### Essential
+##### Essential
 
 1. The harddrive drivers will need to be installed before first reboot.
 
 2. The ethernet drivers will need to be installed after first login under Device Manager.
 
-#### Whatever
+##### Whatever
 
 Things like `qxl` can also be installed under Device Manager. Not really important though.
 
 **All drivers are included with the default install, under `D:/` or `E:/` drive.**
 
-#### Customization
+##### Customization
 
 Additional flags to pass onto `new <image name> <flag> <flag> ...`
 

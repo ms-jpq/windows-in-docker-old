@@ -98,6 +98,8 @@ All ports from VM are forwarded to container except:
 
 `53`, `67-68`, `65001-65535`
 
+**NOT** recommended to run with `--net=host`.
+
 ### Environmental Variables
 
 #### Browser UI

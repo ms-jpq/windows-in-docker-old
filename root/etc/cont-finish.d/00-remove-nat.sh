@@ -4,8 +4,10 @@ set -eu
 set -o pipefail
 
 
-ip link set "$NAT_NAME" down
-brctl delbr "$NAT_NAME"
+ip link set "${NAT_NAME}_1" down
+brctl delbr "${NAT_NAME}_1"
+ip link set "${NAT_NAME}_2" down
+brctl delbr "${NAT_NAME}_2"
 
 
 printf '%s\n' '-------------------------------'

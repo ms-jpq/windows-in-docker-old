@@ -2,6 +2,7 @@
   <name>${NAT_NAME}</name>
   <bridge name="${NAT_NAME}"/>
   <forward mode="nat"/>
+  <mac address="${BR_MAC}"/>
   <ip address="${ROUTER}" netmask="${MASK}">
     <dhcp>
       <range start="${BEGIN}" end="${END}"/>

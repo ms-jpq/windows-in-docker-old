@@ -122,7 +122,7 @@ def rand_mac() -> str:
   return mac
 
 
-def p_mac_addr(name: str) -> str:
+def p_vm_mac(name: str) -> str:
   try:
     xml = slurp(join(_vmdk_, f"{name}.xml"))
     dom = minidom.parseString(xml)
@@ -132,6 +132,14 @@ def p_mac_addr(name: str) -> str:
         mac = interface.getElementsByTagName("mac")[0]
         return mac.getAttribute("address")
     raise ValueError(f"Unable to parse XML -- Missing Mac Address\n{xml}")
+  except OSError:
+    return rand_mac()
+
+
+def p_br_mac(name: str) -> str:
+  try:
+    addr = slurp(join(_vmdk_, f"{name}.nat"))
+    return addr.strip()
   except OSError:
     return rand_mac()
 
@@ -149,9 +157,11 @@ def main() -> None:
   BEGIN = str(next(it))
   VM_IP = str(next(it))
   END = str(subnet.broadcast_address - 1)
-  VM_MAC = p_mac_addr(VM_NAME)
+  BR_MAC = p_br_mac(VM_NAME)
+  VM_MAC = p_vm_mac(VM_NAME)
 
-  values = {"NAT_NAME": NAT_NAME,
+  values = {"BR_MAC": BR_MAC,
+            "NAT_NAME": NAT_NAME,
             "MASK": MASK, "ROUTER": ROUTER,
             "BEGIN": BEGIN, "END": END,
             "VM_MAC": VM_MAC, "VM_IP": VM_IP,

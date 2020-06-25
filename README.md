@@ -47,10 +47,10 @@ docker -it --rm \
   -p 8080:65080 \
   -v /vm_image_dir:/config \
   -v /iso_dir:/install \
-  msjpq/kvm-windows new <windows.iso>
+  msjpq/kvm-windows new <windows.iso> --bios
 ```
 
-**Add `--bios`, if your windows version is old**
+**Add `--bios`, if your windows version is old, or else it will load UEFI**
 
 `<windows.iso>` will eject after first poweroff, you will find the generated libvirt manifest under `/config`.
 
@@ -77,7 +77,7 @@ You will need to manually install some of drivers, (VirtIO is annoying like that
 
 #### Whatever
 
-Things like `qxl`, or `balloon` can also be installed under Device Manager. Not really important though.
+Things like `qxl` can also be installed under Device Manager. Not really important though.
 
 **All drivers are included with the default install, under `D:/` or `E:/` drive.**
 
@@ -95,6 +95,12 @@ Additional flags to pass onto `new <image name> <flag> <flag> ...`
 | `--size`    | `100`    | (GB)                                                                      |
 | `--dry-run` | `False`  | Dry run                                                                   |
 | `--extra`   | `None`   | Extra args for [`virt-install`](https://linux.die.net/man/1/virt-install) |
+
+### Networking
+
+All ports from VM are forwarded to container except:
+
+`53`, `67-68`, `65001-65535`
 
 ### Environmental Variables
 

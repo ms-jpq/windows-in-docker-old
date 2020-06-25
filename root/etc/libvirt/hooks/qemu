@@ -11,12 +11,12 @@ if [[ "$1" == "$VM_NAME" ]]
 then
   if [[ "$2" = "stopped" ]] || [[ "$2" = "reconnect" ]]
   then
-    route-nat --bridge "${NAT_NAME}_1" --ip "$VM_IP" --state off
+    route-nat --bridge "$NAT_NAME" --ip "$VM_IP" --state off
   fi
 
   if [[ "$2" = "start" ]] || [[ "$2" = "reconnect" ]]
   then
-    route-nat --bridge "${NAT_NAME}_1" --ip "$VM_IP" --state on
+    route-nat --bridge "$NAT_NAME" --ip "$VM_IP" --state on
   fi
 fi
 

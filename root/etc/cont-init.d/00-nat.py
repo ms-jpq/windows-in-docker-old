@@ -52,12 +52,12 @@ def spit(path: str, data: bytes) -> None:
     fd.write(data)
 
 
-def envsubst(values: Dict[str, str], path: str, dest: str) -> None:
+def envsubst(values: Dict[str, str], path: str) -> None:
   template = slurp(path)
   subst = ",".join("${" + key + "}" for key in values.keys())
   env = {**environ, **values}
   out = call_into("envsubst", subst, env=env, input=template)
-  spit(dest, out)
+  spit(path, out)
 
 
 def check_br() -> None:
@@ -140,26 +140,25 @@ def p_vm_mac(name: str) -> str:
 def p_br_macs(name: str) -> List[str]:
   mac_rc = join(_vmdk_, f"{name}.nat")
   try:
-    json = slurp(mac_rc)
-    return loads(json)
+    return slurp(mac_rc).decode().strip()
   except OSError:
-    macs = [rand_mac(), rand_mac()]
-    spit(mac_rc, dumps(macs).encode())
-    return macs
+    mac = rand_mac()
+    spit(mac_rc, mac.encode())
+    return mac
 
 
-def build(candidates: Iterator[IPv4Network], idx: int) -> IPv4Address:
+def build(candidates: Iterator[IPv4Network]) -> IPv4Address:
   subnet: IPv4Network = next(candidates)
 
   VM_NAME = environ["VM_NAME"]
-  NAT_NAME = f"{environ['NAT_NAME']}_{idx}"
+  NAT_NAME = environ["NAT_NAME"]
   it: Iterator[IPv4Network] = subnet.hosts()
   MASK = str(subnet.netmask)
   ROUTER = str(next(it))
   BEGIN = str(next(it))
   VM_IP = str(next(it))
   END = str(subnet.broadcast_address - 1)
-  BR_MAC = p_br_macs(VM_NAME)[idx - 1]
+  BR_MAC = p_br_macs(VM_NAME)
   VM_MAC = p_vm_mac(VM_NAME)
 
   values = {"BR_MAC": BR_MAC,
@@ -169,8 +168,9 @@ def build(candidates: Iterator[IPv4Network], idx: int) -> IPv4Address:
             "VM_MAC": VM_MAC, "VM_IP": VM_IP,
             "VM_NAME": VM_NAME}
 
-  envsubst(values, join(_vmrc_, "nat.xml"), join(_vmrc_, f"nat_{idx}.xml"))
-  return VM_IP
+  envsubst(values, join(_vmrc_, "nat.xml"))
+  ip_rc = join(_vmrc_, "ip_addr")
+  spit(ip_rc, VM_IP.encode())
 
 
 def main() -> None:
@@ -178,10 +178,7 @@ def main() -> None:
   networks: List[IPv4Network] = [*p_networks()]
   candidates = p_non_overlapping(networks)
 
-  VM_IP = build(candidates, 1)
-  _ = build(candidates, 2)
-  ip_rc = join(_vmrc_, "ip_addr")
-  spit(ip_rc, VM_IP.encode())
+  build(candidates)
 
 
 main()

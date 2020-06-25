@@ -7,14 +7,9 @@ set -o pipefail
 s6-svwait /var/run/s6/services/libvirtd
 
 
-virsh net-define /vmrc/nat_1.xml
-virsh net-start "${NAT_NAME}_1"
-
-virsh net-define /vmrc/nat_2.xml
-virsh net-start "${NAT_NAME}_2"
-
-virsh net-dumpxml "${NAT_NAME}_1"
-virsh net-dumpxml "${NAT_NAME}_2"
+virsh net-define /vmrc/nat.xml
+virsh net-start "$NAT_NAME"
+virsh net-dumpxml "$NAT_NAME"
 
 
 printf '\n' >&69

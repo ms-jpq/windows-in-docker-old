@@ -1,6 +1,7 @@
 #!/usr/bin/with-contenv python3
 
 from ipaddress import IPv4Address, IPv4Network, ip_address, ip_network
+from itertools import chain
 from json import dumps, loads
 from json import loads
 from os import environ
@@ -108,11 +109,11 @@ def p_non_overlapping_exclusions(networks: List[IPv4Network]) -> Iterable[IPv4Ne
 
 
 def p_non_overlapping(networks: List[IPv4Network]) -> Iterable[IPv4Network]:
-  seen = [*networks]
+  seen = []
   exclusions = p_non_overlapping_exclusions(networks)
   for exclusion in exclusions:
     if all(not exclusion.overlaps(network)
-           for network in seen):
+           for network in chain(seen, networks)):
       seen.append(exclusion)
       yield exclusion
 

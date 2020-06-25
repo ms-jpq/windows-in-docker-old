@@ -38,9 +38,8 @@ def ip_table(bridge: str, ip: IPv4Address, state: State, port_range: Tuple[int, 
             action, "FORWARD",
             "--out-interface", bridge,
             "--protocol", protocol,
-            "--match", "multiport",
             "--destination", str(ip),
-            "--destination-ports", f"{lo}:{hi}",
+            "--destination-port", f"{lo}:{hi}",
             "--jump", "ACCEPT")
 
   def chain2(protocol: str) -> Iterable[str]:
@@ -48,8 +47,8 @@ def ip_table(bridge: str, ip: IPv4Address, state: State, port_range: Tuple[int, 
             "--table", "nat",
             action, "PREROUTING",
             "--protocol", protocol,
-            "--match", "multiport",
-            "--destination-ports", f"{lo}:{hi}",
+            "--destination", str(ip),
+            "--destination-port", f"{lo}:{hi}",
             "--jump", "DNAT",
             "--to", f"{ip}:{lo}-{hi}")
 

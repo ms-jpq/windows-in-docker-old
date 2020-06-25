@@ -98,6 +98,7 @@ def main() -> None:
   chdir("/")
   print("\n" * 10)
   name = environ["VM_NAME"]
+  bold_print(f"Installing -- {name}")
   try:
     args = parse()
     vmdk = join(_vmdk_dir_, f"{name}.img")

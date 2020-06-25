@@ -170,6 +170,9 @@ def build(candidates: Iterator[IPv4Network]) -> IPv4Address:
             "VM_NAME": VM_NAME}
 
   envsubst(values, join(_vmrc_, "nat.xml"))
+
+  net_rc = join(_vmrc_, "network")
+  spit(net_rc, str(subnet).encode())
   ip_rc = join(_vmrc_, "ip_addr")
   spit(ip_rc, VM_IP.encode())
 

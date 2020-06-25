@@ -2,7 +2,7 @@
 
 from enum import Enum
 from argparse import ArgumentParser, Namespace
-from ipaddress import IPv4Address, ip_address
+from ipaddress import IPv4Address, IPv4Network, ip_address, ip_network
 from os import environ
 from subprocess import run
 from typing import List, Iterable, Tuple
@@ -23,24 +23,32 @@ def parse_args() -> Namespace:
   parser = ArgumentParser()
   parser.add_argument("--bridge", required=True)
   parser.add_argument("--ip", required=True, type=ip_address)
+  parser.add_argument("--network", required=True, type=ip_network)
   parser.add_argument("--state", required=True,
                       choices=(State.on, State.off), type=State)
   return parser.parse_args()
 
 
-def ip_table(bridge: str, ip: IPv4Address, state: State, port_range: Tuple[int, int]) -> None:
+def iptables1(bridge: str, network: IPv4Network, state: State) -> None:
   action = "--insert" if state == State.on else "--delete"
-  lo, hi = port_range
 
-  def chain1(protocol: str) -> Iterable[str]:
+  def chain1() -> Iterable[str]:
     return ("iptables",
             "--table", "filter",
-            action, "FORWARD",
+            action, "FORWARD", "1",
             "--out-interface", bridge,
-            "--protocol", protocol,
-            "--destination", str(ip),
-            "--destination-port", f"{lo}:{hi}",
+            "--match", "state",
+            "--source", f"!{network}",
+            "--destination", str(network),
+            "--state", "NEW,RELATED,ESTABLISHED",
             "--jump", "ACCEPT")
+
+  call(*chain1())
+
+
+def iptables2(ip: IPv4Address, state: State, port_range: Tuple[int, int]) -> None:
+  action = "--insert" if state == State.on else "--delete"
+  lo, hi = port_range
 
   def chain2(protocol: str) -> Iterable[str]:
     return ("iptables",
@@ -52,8 +60,6 @@ def ip_table(bridge: str, ip: IPv4Address, state: State, port_range: Tuple[int, 
             "--jump", "DNAT",
             "--to", f"{ip}:{lo}-{hi}")
 
-  call(*chain1("tcp"))
-  call(*chain1("udp"))
   call(*chain2("tcp"))
   call(*chain2("udp"))
 
@@ -63,11 +69,13 @@ def main() -> None:
   ranges = [(1, 52),
             (54, 66),
             (69, 65000)]
+  iptables1(bridge=args.bridge,
+            network=args.network,
+            state=args.state)
   for port_range in ranges:
-    ip_table(bridge=args.bridge,
-             ip=args.ip,
-             state=args.state,
-             port_range=port_range)
+    iptables2(ip=args.ip,
+              state=args.state,
+              port_range=port_range)
 
 
 main()

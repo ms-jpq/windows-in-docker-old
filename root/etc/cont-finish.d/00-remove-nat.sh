@@ -14,7 +14,8 @@ printf '%s\n' '-------------------------------'
 
 
 VM_IP="$(< /vmrc/ip_addr)"
-route-nat --bridge "$NAT_NAME" --ip "$VM_IP" --state off
+VM_NET="$(< /vmrc/network)"
+route-nat --bridge "$NAT_NAME" --ip "$VM_IP" --network "$VM_NET" --state off
 
 
 printf '%s\n' '-------------------------------'

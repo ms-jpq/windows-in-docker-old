@@ -159,11 +159,6 @@ def main() -> None:
   envsubst(values, _nat_rc_)
   spit(_ip_rc_, VM_IP.encode())
 
-  call("route-nat",
-       "--bridge", NAT_NAME,
-       "--ip", VM_IP,
-       "--state", "on")
-
 
 main()
 

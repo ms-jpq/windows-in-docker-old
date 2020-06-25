@@ -1,0 +1,22 @@
+#!/usr/bin/with-contenv bash
+
+set -eu
+set -o pipefail
+
+
+VM_IP="$(< /vmrc/ip_addr)"
+
+
+if [[ "$1" == "VM NAME" ]]
+then
+  if [[ "$2" = "stopped" ]] || [[ "$2" = "reconnect" ]]
+  then
+    route-nat --bridge "$NAT_NAME" --ip "$VM_IP" --state off
+  fi
+
+  if [[ "$2" = "start" ]] || [[ "$2" = "reconnect" ]]
+  then
+    route-nat --bridge "$NAT_NAME" --ip "$VM_IP" --state on
+  fi
+fi
+

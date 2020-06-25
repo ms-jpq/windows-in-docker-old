@@ -5,7 +5,7 @@ from argparse import ArgumentParser, Namespace
 from ipaddress import IPv4Address, ip_address
 from os import environ
 from subprocess import run
-from typing import List, Iterable
+from typing import List, Iterable, Tuple
 
 
 class State(Enum):
@@ -28,9 +28,9 @@ def parse_args() -> Namespace:
   return parser.parse_args()
 
 
-def ip_table(bridge: str, ip: IPv4Address, state: State) -> None:
-  action = "--append" if state == State.on else "--delete"
-  lo, hi = 1, 65000
+def ip_table(bridge: str, ip: IPv4Address, state: State, port_range: Tuple[int, int]) -> None:
+  action = "--insert" if state == State.on else "--delete"
+  lo, hi = port_range
 
   def chain1(protocol: str) -> Iterable[str]:
     return ("iptables",
@@ -61,9 +61,12 @@ def ip_table(bridge: str, ip: IPv4Address, state: State) -> None:
 
 def main() -> None:
   args = parse_args()
-  ip_table(bridge=args.bridge,
-           ip=args.ip,
-           state=args.state)
+  ranges = [(1024, 65000)]
+  for port_range in ranges:
+    ip_table(bridge=args.bridge,
+             ip=args.ip,
+             state=args.state,
+             port_range=port_range)
 
 
 main()

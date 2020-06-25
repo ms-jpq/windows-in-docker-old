@@ -53,7 +53,7 @@ def install(name, args: Namespace, vmdk: str) -> List[str]:
       "virt-install",
       "--events", "on_crash=restart,on_reboot=restart,on_poweroff=destroy",
       "--virt-type", "kvm",
-      "--features", "kvm.hidden.state==yes",
+      "--features", "kvm.hidden.state=on",
       "--os-variant", args.os,
       "--vcpus", f"{args.cpus},sockets=1",
       "--memory", f"{args.memory}",

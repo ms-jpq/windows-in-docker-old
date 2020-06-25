@@ -17,6 +17,7 @@ _vmdk_ = "/config"
 _vmrc_ = "/vmrc"
 _nat_rc_ = join(_vmrc_, "nat.xml")
 _ip_rc_ = join(_vmrc_, "ip_addr")
+_network_rc_ = join(_vmrc_, "network")
 
 
 def bold_print(message: str, sep="-", file=stdout) -> None:
@@ -171,6 +172,7 @@ def main() -> None:
             "VM_NAME": VM_NAME}
   envsubst(values, _nat_rc_)
   spit(_ip_rc_, VM_IP.encode())
+  spit(_network_rc_, str(subnet).encode())
 
 
 main()

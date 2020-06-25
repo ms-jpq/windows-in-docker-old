@@ -66,7 +66,7 @@ def install(name, args: Namespace, vmdk: str) -> List[str]:
       "--disk", f"path={vmdk},size={args.size},format=raw,sparse=true,bus=scsi,discard=unmap",
       "--network", f"network={environ['NAT_NAME']},model=virtio",
       "--disk", f"{_drivers_},device=cdrom",
-      "--qemu-commandline=\"-uuid\"", f"--qemu-commandline={uuid4()}",
+      "--qemu-commandline=-uuid", f"--qemu-commandline={uuid4()}",
       "--name", name,
       "--check", "disk_size=off",
       "--cdrom", join(_install_dir_, args.windows_img),

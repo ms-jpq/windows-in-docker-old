@@ -1,7 +1,3 @@
-# WORK IN PROGRESS
-
----
-
 # [WIND - Windows in Docker](https://ms-jpq.github.io/windows-in-docker)
 
 Browser > Docker > KVM > Windows

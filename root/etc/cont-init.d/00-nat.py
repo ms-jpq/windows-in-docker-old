@@ -118,7 +118,7 @@ def p_non_overlapping(networks: List[IPv4Network]) -> Iterable[IPv4Network]:
 
 
 def rand_mac() -> str:
-  def mac_slot(): return format(randint(0, 255), 'x')
+  def mac_slot(): return format(randint(0, 255), "02x")
   mac = f"52:54:00:{mac_slot()}:{mac_slot()}:{mac_slot()}"
   return mac
 

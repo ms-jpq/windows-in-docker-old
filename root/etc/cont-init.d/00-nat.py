@@ -143,7 +143,7 @@ def p_br_mac(name: str) -> str:
     return addr.strip()
   except OSError:
     mac = rand_mac()
-    spit(mac_rc, mac)
+    spit(mac_rc, mac.encode())
     return mac
 
 

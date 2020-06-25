@@ -29,26 +29,19 @@ def parse_args() -> Namespace:
   return parser.parse_args()
 
 
-def iptables1(bridge: str, network: IPv4Network, state: State) -> None:
-  action = "--insert" if state == State.on else "--delete"
-
-  def chain1() -> Iterable[str]:
-    return ("iptables",
-            "--table", "filter",
-            action, "FORWARD", "1",
-            "--out-interface", bridge,
-            "--match", "state",
-            "--source", f"!{network}",
-            "--destination", str(network),
-            "--state", "NEW,RELATED,ESTABLISHED",
-            "--jump", "ACCEPT")
-
-  call(*chain1())
-
-
-def iptables2(ip: IPv4Address, state: State, port_range: Tuple[int, int]) -> None:
+def ip_table(bridge: str, ip: IPv4Address, state: State, port_range: Tuple[int, int]) -> None:
   action = "--insert" if state == State.on else "--delete"
   lo, hi = port_range
+
+  def chain1(protocol: str) -> Iterable[str]:
+    return ("iptables",
+            "--table", "filter",
+            action, "FORWARD",
+            "--out-interface", bridge,
+            "--protocol", protocol,
+            "--destination", str(ip),
+            "--destination-port", f"{lo}:{hi}",
+            "--jump", "ACCEPT")
 
   def chain2(protocol: str) -> Iterable[str]:
     return ("iptables",
@@ -60,6 +53,8 @@ def iptables2(ip: IPv4Address, state: State, port_range: Tuple[int, int]) -> Non
             "--jump", "DNAT",
             "--to", f"{ip}:{lo}-{hi}")
 
+  call(*chain1("tcp"))
+  call(*chain1("udp"))
   call(*chain2("tcp"))
   call(*chain2("udp"))
 
@@ -69,13 +64,11 @@ def main() -> None:
   ranges = [(1, 52),
             (54, 66),
             (69, 65000)]
-  iptables1(bridge=args.bridge,
-            network=args.network,
-            state=args.state)
   for port_range in ranges:
-    iptables2(ip=args.ip,
-              state=args.state,
-              port_range=port_range)
+    ip_table(bridge=args.bridge,
+             ip=args.ip,
+             state=args.state,
+             port_range=port_range)
 
 
 main()

@@ -137,11 +137,14 @@ def p_vm_mac(name: str) -> str:
 
 
 def p_br_mac(name: str) -> str:
+  mac_rc = join(_vmdk_, f"{name}.nat")
   try:
-    addr = slurp(join(_vmdk_, f"{name}.nat"))
+    addr = slurp(mac_rc)
     return addr.strip()
   except OSError:
-    return rand_mac()
+    mac = rand_mac()
+    spit(mac_rc, mac)
+    return mac
 
 
 def main() -> None:

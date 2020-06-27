@@ -11,7 +11,7 @@ from shutil import get_terminal_size
 from socket import AddressFamily
 from subprocess import PIPE, run
 from sys import stderr, stdout
-from typing import Any, Dict, List, Iterable, Iterator, Optional
+from typing import Any, Dict, List, Iterator, Iterator, Optional
 from xml.dom import minidom
 
 
@@ -72,7 +72,7 @@ def check_br() -> None:
     exit(1)
 
 
-def p_networks() -> Iterable[IPv4Network]:
+def p_networks() -> Iterator[IPv4Network]:
   out = call_into("ip", "-4", "-j", "route")
   routes = loads(out.decode())
   for route in routes:
@@ -83,7 +83,7 @@ def p_networks() -> Iterable[IPv4Network]:
       pass
 
 
-def private_subnets() -> Iterable[IPv4Network]:
+def private_subnets() -> Iterator[IPv4Network]:
   private_ranges: List[IPv4Network] = [
       ip_network("192.168.0.0/16"),
       ip_network("172.16.0.0/12"),
@@ -94,21 +94,21 @@ def private_subnets() -> Iterable[IPv4Network]:
       yield from private_range.subnets(new_prefix=i)
 
 
-def p_exclude(parent: IPv4Network, child: IPv4Network) -> Iterable[IPv4Network]:
+def p_exclude(parent: IPv4Network, child: IPv4Network) -> Iterator[IPv4Network]:
   try:
     yield from parent.address_exclude(child)
   except ValueError:
     yield parent
 
 
-def p_non_overlapping_exclusions(networks: List[IPv4Network]) -> Iterable[IPv4Network]:
+def p_non_overlapping_exclusions(networks: List[IPv4Network]) -> Iterator[IPv4Network]:
   for private_range in private_subnets():
     for network in networks:
       for exclusion in p_exclude(private_range, network):
         yield exclusion
 
 
-def p_non_overlapping(networks: List[IPv4Network]) -> Iterable[IPv4Network]:
+def p_non_overlapping(networks: List[IPv4Network]) -> Iterator[IPv4Network]:
   seen = []
   exclusions = p_non_overlapping_exclusions(networks)
   for exclusion in exclusions:

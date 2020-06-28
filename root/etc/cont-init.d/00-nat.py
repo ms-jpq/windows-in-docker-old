@@ -1,16 +1,15 @@
 #!/usr/bin/with-contenv python3
 
-from ipaddress import IPv4Address, IPv4Network, ip_address, ip_network
+from ipaddress import IPv4Address, IPv4Network, ip_network
 from itertools import chain
-from json import dumps, loads
+from json import loads
 from os import environ
 from os.path import join
 from random import randint
 from shutil import get_terminal_size
-from socket import AddressFamily
 from subprocess import PIPE, run
-from sys import stderr, stdout
-from typing import Any, Dict, Iterator, List, Optional
+from sys import stdout
+from typing import Dict, Iterator, List
 from xml.dom import minidom
 
 _vmdk_ = "/config"
@@ -18,7 +17,7 @@ _vmrc_ = "/vmrc"
 
 
 def bold_print(message: str, sep="-", file=stdout) -> None:
-    _, cols = get_terminal_size()
+    cols, _ = get_terminal_size()
     print(sep * cols, file=file)
     print(message, file=file)
     print(sep * cols, file=file)

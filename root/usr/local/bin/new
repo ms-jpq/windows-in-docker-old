@@ -2,12 +2,12 @@
 
 from argparse import ArgumentParser, Namespace
 from multiprocessing import cpu_count
-from os import chdir, environ, popen
+from os import chdir, environ
 from os.path import isfile, join
 from shutil import get_terminal_size
 from subprocess import PIPE, run
 from sys import stderr, stdout
-from typing import List, Tuple
+from typing import List
 from uuid import uuid4
 from xml.dom import minidom
 
@@ -17,7 +17,7 @@ _vmdk_dir_ = "config"
 
 
 def bold_print(message: str, sep="-", file=stdout) -> None:
-    _, cols = get_terminal_size()
+    cols, _ = get_terminal_size()
     print(sep * cols, file=file)
     print(message, file=file)
     print(sep * cols, file=file)

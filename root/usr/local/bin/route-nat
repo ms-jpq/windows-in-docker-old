@@ -2,8 +2,7 @@
 
 from argparse import ArgumentParser, Namespace
 from enum import Enum
-from ipaddress import IPv4Address, IPv4Network, ip_address, ip_network
-from os import environ
+from ipaddress import IPv4Address, ip_address, ip_network
 from subprocess import run
 from typing import Iterator, List, Tuple
 

@@ -1,75 +1,92 @@
 #!/usr/bin/env python3
 
-from enum import Enum
 from argparse import ArgumentParser, Namespace
+from enum import Enum
 from ipaddress import IPv4Address, IPv4Network, ip_address, ip_network
 from os import environ
 from subprocess import run
-from typing import List, Iterator, Tuple
+from typing import Iterator, List, Tuple
 
 
 class State(Enum):
-  on = "on"
-  off = "off"
+    on = "on"
+    off = "off"
 
 
 def call(prog: str, *args: List[str]) -> bytes:
-  ret = run([prog, *args])
-  if ret.returncode != 0:
-    exit(ret.returncode)
+    ret = run([prog, *args])
+    if ret.returncode != 0:
+        exit(ret.returncode)
 
 
 def parse_args() -> Namespace:
-  parser = ArgumentParser()
-  parser.add_argument("--bridge", required=True)
-  parser.add_argument("--ip", required=True, type=ip_address)
-  parser.add_argument("--network", required=True, type=ip_network)
-  parser.add_argument("--state", required=True,
-                      choices=(State.on, State.off), type=State)
-  return parser.parse_args()
+    parser = ArgumentParser()
+    parser.add_argument("--bridge", required=True)
+    parser.add_argument("--ip", required=True, type=ip_address)
+    parser.add_argument("--network", required=True, type=ip_network)
+    parser.add_argument(
+        "--state", required=True, choices=(State.on, State.off), type=State
+    )
+    return parser.parse_args()
 
 
-def ip_table(bridge: str, ip: IPv4Address, state: State, port_range: Tuple[int, int]) -> None:
-  action = "--insert" if state == State.on else "--delete"
-  lo, hi = port_range
+def ip_table(
+    bridge: str, ip: IPv4Address, state: State, port_range: Tuple[int, int]
+) -> None:
+    action = "--insert" if state == State.on else "--delete"
+    lo, hi = port_range
 
-  def chain1(protocol: str) -> Iterator[str]:
-    return ("iptables",
-            "--table", "filter",
-            action, "FORWARD",
-            "--out-interface", bridge,
-            "--protocol", protocol,
-            "--destination", str(ip),
-            "--destination-port", f"{lo}:{hi}",
-            "--jump", "ACCEPT")
+    def chain1(protocol: str) -> Iterator[str]:
+        return (
+            "iptables",
+            "--table",
+            "filter",
+            action,
+            "FORWARD",
+            "--out-interface",
+            bridge,
+            "--protocol",
+            protocol,
+            "--destination",
+            str(ip),
+            "--destination-port",
+            f"{lo}:{hi}",
+            "--jump",
+            "ACCEPT",
+        )
 
-  def chain2(protocol: str) -> Iterator[str]:
-    return ("iptables",
-            "--table", "nat",
-            action, "PREROUTING",
-            "--protocol", protocol,
-            "--destination", str(ip),
-            "--destination-port", f"{lo}:{hi}",
-            "--jump", "DNAT",
-            "--to", f"{ip}:{lo}-{hi}")
+    def chain2(protocol: str) -> Iterator[str]:
+        return (
+            "iptables",
+            "--table",
+            "nat",
+            action,
+            "PREROUTING",
+            "--protocol",
+            protocol,
+            "--destination",
+            str(ip),
+            "--destination-port",
+            f"{lo}:{hi}",
+            "--jump",
+            "DNAT",
+            "--to",
+            f"{ip}:{lo}-{hi}",
+        )
 
-  call(*chain1("tcp"))
-  call(*chain1("udp"))
-  call(*chain2("tcp"))
-  call(*chain2("udp"))
+    call(*chain1("tcp"))
+    call(*chain1("udp"))
+    call(*chain2("tcp"))
+    call(*chain2("udp"))
 
 
 def main() -> None:
-  args = parse_args()
-  ranges = [(1, 52),
-            (54, 66),
-            (69, 65000)]
-  for port_range in ranges:
-    ip_table(bridge=args.bridge,
-             ip=args.ip,
-             state=args.state,
-             port_range=port_range)
+    args = parse_args()
+    ranges = [(1, 52), (54, 66), (69, 65000)]
+    for port_range in ranges:
+        ip_table(
+            bridge=args.bridge, ip=args.ip, state=args.state, port_range=port_range
+        )
 
 
 main()
-

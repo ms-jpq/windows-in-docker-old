@@ -25,3 +25,5 @@ ENTRYPOINT ["/init"]
 WORKDIR /srv/run
 COPY . /
 
+
+RUN printf '%s' 'root:docker!' | chpasswd

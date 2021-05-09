@@ -2,6 +2,9 @@
 version: "3.9"
 
 services:
-  router:
+  wind:
     restart: always
+    privileged: True
     build: ./docker
+    ports:
+      - 127.0.0.1:8080:9090

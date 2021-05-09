@@ -1,3 +1,0 @@
-root ALL=(ALL) ALL
-nobody ALL=(ALL) NOPASSWD: ALL
-

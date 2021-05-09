@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -eu
-set -o pipefail
-
-
-exec /novnc/utils/launch.sh --listen 65068 --vnc localhost:65059
-

@@ -3,6 +3,3 @@
 set -eu
 set -o pipefail
 
-
-s6-svscanctl -t /var/run/s6/services
-

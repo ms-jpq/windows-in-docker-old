@@ -4,5 +4,9 @@ set -eu
 set -o pipefail
 
 
-exec cockpit-ws
+export PATH="$PATH:/usr/libexec"
+
+
+exec cockpit-ws --no-tls
+
 

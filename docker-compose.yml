@@ -8,3 +8,5 @@ services:
     build: ./docker
     ports:
       - 127.0.0.1:8080:9090
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro

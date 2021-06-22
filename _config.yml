@@ -1,9 +1,7 @@
+---
 title: WIND - Windows in Docker
 
 showcase: True
-
-desc: >-
-   WHY? So you can run Windows "as a container"
 
 images:
   - https://raw.githubusercontent.com/ms-jpq/windows-in-docker/gates/preview/scr.png

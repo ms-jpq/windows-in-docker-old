@@ -24,9 +24,9 @@ This image is vastly more user friendly, it comes with:
 
 ## Preview
 
-<!-- ![preview1 img](https://raw.githubusercontent.com/ms-jpq/windows-in-docker/gates/preview/scr.png) -->
+![preview1 img](https://raw.githubusercontent.com/ms-jpq/windows-in-docker/gates/preview/scr.png)
 
-<!-- ![preview2 img](https://raw.githubusercontent.com/ms-jpq/windows-in-docker/gates/preview/drivers.png) -->
+![preview2 img](https://raw.githubusercontent.com/ms-jpq/windows-in-docker/gates/preview/drivers.png)
 
 ## Instructions
 

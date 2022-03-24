@@ -4,13 +4,11 @@
 
 ![preview.img](https://raw.githubusercontent.com/ms-jpq/windows-in-docker/main/screenshots/virtman.png)
 
--------------------
+---
 
 # The thingy below is **depreciated**
 
----------------------
-
-# Almost done, Work in Progress
+---
 
 # [WIND - Windows in Docker](https://ms-jpq.github.io/windows-in-docker)
 

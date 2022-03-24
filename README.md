@@ -6,7 +6,9 @@
 
 -------------------
 
-The thingy below is **depreciated**
+# The thingy below is **depreciated**
+
+---------------------
 
 # Almost done, Work in Progress
 
